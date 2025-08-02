@@ -1,0 +1,26 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+block main
+    .container.mt-5
+        .row
+            .col-md-6
+                img.img-fluid.rounded.shadow(src=product.thumbnail, alt=product.title)
+            .col-md-6
+                h2= product.title
+                p.text-muted.mt-3= product.description
+
+                h4.text-danger.mt-4
+                    | Giá khuyến mãi: $
+                    = (product.price - product.price * product.discountPercentage / 100).toFixed(2)
+                    small.text-muted.ml-2
+                        del $#{product.price}
+                        span.badge.badge-success.ml-2 #{product.discountPercentage}% OFF
+
+                p.mt-2
+                    strong Còn lại trong kho:
+                    span.ml-2= product.stock + " sản phẩm"
+                a(
+                    class="btn btn-warning"
+                    href=`${prefixAdmin}/products/edit/${product.id}` 
+                ) Chỉnh sửa
+    script(src="/admin/js/product.js")
