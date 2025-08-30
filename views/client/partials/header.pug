@@ -1,14 +1,51 @@
+include ../mixins/sub-menu.pug
 header.header
     .container
         .row.align-item-center
             .col-3
                 .inner-logo
                     a(href="/")
-                        img(src="/images/spain_real-madrid.svg",alt="logo")
-            .col-9
+                        img(src=settingGeneral.logo,alt="logo")
+            .col-5
+                form(
+                    action="/search"
+                    method="GET"
+                )
+                    div(class="form-group d-flex mb-0")
+                        input(
+                            type="text"
+                            placeholder="Nhập từ khoá"
+                            class="form-control"
+                            name="keyword"
+                            value=keyword
+                        )
+                        button(
+                            type="submit"
+                            class="btn btn-primary ml-1"
+                        ) Tìm
+            .col-4
                 .inner-menu
                     ul
                         li
                             a(href="/") Trang Chủ
+                        li(class="sub-menu")
+                            -const pathProduct="/products"
+                            a(href=pathProduct) sản phẩm
+                                +sub-menu(layoutProductsCategory,pathProduct)
                         li
-                            a(href="/products") sản phẩm
+                        if(miniCart.totalQuantity>0)
+                            a(href=`/cart`) Giỏ hàng(#{miniCart.totalQuantity})
+                        else
+                            a(href=`/cart`) Giỏ hàng(0)
+                        if(user)
+                            li
+                                a(href="/chat") Chat
+                            li
+                                a(href="/user/logout") Đăng Xuất
+                            li
+                                a(href="/user/info") Thông tin tài khoản
+                        else
+                            li
+                                a(href="/user/login") Đăng Nhập
+                            li
+                                a(href="/user/register") Đăng ký

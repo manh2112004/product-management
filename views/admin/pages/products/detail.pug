@@ -6,7 +6,7 @@ block main
                 img.img-fluid.rounded.shadow(src=product.thumbnail, alt=product.title)
             .col-md-6
                 h2= product.title
-                p.text-muted.mt-3= product.description
+                p.text-muted.mt-3!= product.description
 
                 h4.text-danger.mt-4
                     | Giá khuyến mãi: $

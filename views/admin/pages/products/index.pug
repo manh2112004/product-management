@@ -4,6 +4,7 @@ include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/showAlert.pug
+include ../../mixins/sort.pug
 block main
     +showAlert(5000)
     h1 Trang sản phẩm
@@ -15,7 +16,12 @@ block main
                     +filter-Status(filterStatus)
                 .col-6
                     +search(keyword)
-    h1 Trang sản phẩm
+    .card.mb-3
+        .card-header Sắp xếp
+        .card-body 
+            .row
+                .col-4
+                    +sort()
     .card.mb-3
         .card-header Danh sách
         .card-body
@@ -27,75 +33,85 @@ block main
                         href=`${prefixAdmin}/products/create`
                         class="btn btn-outline-success"
                     ) +Thêm mới
-            table(
-                class="table table-hover table-sm"
-                checkbox-multi
-            )
-                thead
+        table(
+            class="table table-hover table-sm"
+            checkbox-multi
+        )
+            thead
+                tr
+                    th
+                        input(type="checkbox" name="checkall")
+                    th STT
+                    th Hình ảnh
+                    th Tiêu đề
+                    th Giá
+                    th vị trí
+                    th Trạng thái
+                    th Người tạo
+                    th Người cập nhật gần nhất
+                    th Hành động
+            tbody
+                each item,index in products
                     tr
-                        th
-                            input(type="checkbox" name="checkall")
-                        th STT
-                        th Hình ảnh
-                        th Tiêu đề
-                        th Giá
-                        th vị trí
-                        th Trạng thái
-                        th Hành động
-                tbody
-                    each item,index in products
-                        tr
-                        td
-                            input(
-                                type="checkbox"
-                                name="id"
-                                value=item.id
-                            )
-                        td #{index+1}
-                        td 
-                            img(src=item.thumbnail)
-                        td #{item.title}
-                        td #{item.price}$
-                        td
-                            input(
-                                type="number"
-                                value=item.position
-                                style="width:50px"
-                                min="1"
-                                name="position"
-                            )
-                        td 
-                            if(item.status=="active")
-                                a(
-                                    href="javascript:" 
-                                    class="badge badge-success"
-                                    button-change-status
-                                    data-status=item.status
-                                    data-id=item._id
-                                ) Hoạt động
-                            else
-                                a(
-                                    href="javascript:" 
-                                    class="badge badge-danger"
-                                    button-change-status
-                                    data-status=item.status
-                                    data-id=item._id
-                                ) Dừng hoạt động
-                        td
+                    td
+                        input(
+                            type="checkbox"
+                            name="id"
+                            value=item.id
+                        )
+                    td #{index+1}
+                    td 
+                        img(src=item.thumbnail)
+                    td #{item.title}
+                    td #{item.price}$
+                    td
+                        input(
+                            type="number"
+                            value=item.position
+                            style="width:50px"
+                            min="1"
+                            name="position"
+                        )
+                    td 
+                        if(item.status=="active")
                             a(
-                                href=`${prefixAdmin}/products/detail/${item.id}` 
-                                class="btn btn-sm btn-secondary"
-                                ) Chi tiết
+                                href="javascript:" 
+                                class="badge badge-success"
+                                button-change-status
+                                data-status=item.status
+                                data-id=item._id
+                            ) Hoạt động
+                        else
                             a(
-                                href=`${prefixAdmin}/products/edit/${item.id}` 
-                                class="btn btn-sm btn-warning ml-1  "
-                                ) Sửa
-                            a(
-                                href="#" 
-                                class="btn btn-sm btn-danger ml-1"
-                                button-delete
-                                data-id=item.id
-                            ) Xoá
+                                href="javascript:" 
+                                class="badge badge-danger"
+                                button-change-status
+                                data-status=item.status
+                                data-id=item._id
+                            ) Dừng hoạt động
+                    td 
+                        p #{item.accountFullName}
+                        p #{moment(item.createdBy.createdAt).format("DD/MM/YYYY hh:mm:ss")}
+                    td 
+                        -const updateBy=item.updatedBy.slice(-1)[0]
+                        if(updateBy)
+                            p #{updateBy.accountFullName}
+                            p #{moment(updateBy.updatedAt).format("DD/MM/YYYY hh:mm:ss")}
+                    td
+                        a(
+                            href=`${prefixAdmin}/products/detail/${item.id}` 
+                            class="btn btn-sm btn-secondary"
+                            ) Chi tiết
+                        a(
+                            href=`${prefixAdmin}/products/edit/${item.id}` 
+                            class="btn btn-sm btn-warning ml-1  "
+                            ) Sửa
+                        a(
+                            href="#" 
+                            class="btn btn-sm btn-danger ml-1"
+                            button-delete
+                            data-id=item.id
+                        ) Xoá
     +pagination(pagination)
     form(
         action="",

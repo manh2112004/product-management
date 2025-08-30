@@ -1,26 +1,48 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 block main
-    .container.mt-5
-        .row
-            .col-md-6
-                img.img-fluid.rounded.shadow(src=product.thumbnail, alt=product.title)
-            .col-md-6
-                h2= product.title
-                p.text-muted.mt-3= product.description
+    .product-detail
+        .container.my-5
+            .row
+                .col-6
+                    .inner-thumb
+                        img(src=product.thumbnail)
+                .col-6
+                    h1(class="inner-title") #{product.title}
+                    if(product.category)
+                        div(class="inner-category")
+                            span Danh mục:
+                            a(href=`/products/${product.category.slug}`) #{product.category.title}
+                    if(product.priceNew)
+                        div(class="inner-price-new") #{product.priceNew}$
+                    if(product.price)
+                        div(class="inner-price-old") #{product.price}$
+                    if(product.discountPercentage)
+                        div(class="inner-percent") Giảm tới <span>#{product.discountPercentage}%</span>
+                    if(product.stock)
+                        div(class="inner-stock") Còn lại <span>#{product.stock}</span> Sản phẩm
+                    form(
+                        action=`/cart/add/${product.id}`
+                        method="POST"
+                    )
+                        input(
+                            class="form-control mb-2"
+                            type="number"
+                            name="quantity"
+                            value="1"
+                            min="1"
+                            max=product.stock
+                        )
+                        button(
+                            type="submit"
+                            class="btn btn-success btn-block"
+                        ) Thêm vào giỏ hàng
+        hr
+        .container.my-5
+            .row
+                .col-12
+                    +box-head("Mô tả sản phẩm")
+                    .inner-desc !{product.description}
 
-                h4.text-danger.mt-4
-                    | Giá khuyến mãi: $
-                    = (product.price - product.price * product.discountPercentage / 100).toFixed(2)
-                    small.text-muted.ml-2
-                        del $#{product.price}
-                        span.badge.badge-success.ml-2 #{product.discountPercentage}% OFF
-
-                p.mt-2
-                    strong Còn lại trong kho:
-                    span.ml-2= product.stock + " sản phẩm"
-                a(
-                    class="btn btn-warning"
-                    href=`${prefixAdmin}/products/edit/${product.id}` 
-                ) Chỉnh sửa
-    script(src="/admin/js/product.js")
+                    
+                        

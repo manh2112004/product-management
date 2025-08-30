@@ -1,0 +1,38 @@
+extends ../../layouts/default.pug
+include ../../mixins/showAlert.pug
+
+block main
+    .container.my-5
+        .row.justify-content-center
+            .col-8
+                h1.text-center.mb-4 Thông tin tài khoản
+                .card.shadow-sm.rounded
+                    .card-body.text-center
+                        if user.avatar
+                            img(src=user.avatar, alt="Avatar", class="rounded-circle mb-3", style="width:120px; height:120px; object-fit:cover;")
+                        else
+                            img(src="/images/default-avatar.png", alt="Avatar", class="rounded-circle mb-3", style="width:120px; height:120px; object-fit:cover;")
+
+                        h4.mb-3 #{user.fullName}
+
+                        hr
+                        .row.mb-3
+                            .col-sm-4.text-muted.text-start Email:
+                            .col-sm-8.text-start #{user.email}
+                        .row.mb-3
+                            .col-sm-4.text-muted.text-start Trạng thái:
+                            .col-sm-8.text-start
+                                if user.status == 'active'
+                                    span.badge.bg-success Đang hoạt động
+                                else
+                                    span.badge.bg-secondary Không hoạt động
+                        .row.mb-3
+                            .col-sm-4.text-muted.text-start Ngày tạo:
+                            .col-sm-8.text-start #{user.createdAt.toLocaleString()}
+                        .row.mb-3
+                            .col-sm-4.text-muted.text-start Ngày cập nhật:
+                            .col-sm-8.text-start #{user.updatedAt.toLocaleString()}
+
+                    .card-footer.text-end
+                        a.btn.btn-outline-primary(href="/user/edit") Chỉnh sửa
+                        a.btn.btn-outline-danger.ms-2(href="/user/delete") Xóa tài khoản

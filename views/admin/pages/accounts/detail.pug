@@ -1,0 +1,33 @@
+extends ../../layouts/default.pug
+block main
+    //- Tiêu đề
+    h2.mb-4 Chi tiết tài khoản
+
+    .card.shadow-sm
+        .card-body
+            .row
+                .col-md-3.text-center
+                    img(src=account.avatar alt="Avatar" class="img-fluid rounded-circle mb-3" style="width:150px;height:150px;object-fit:cover;")
+                    span.badge(class=account.status === 'active' ? 'bg-success' : 'bg-secondary')= account.status === 'active' ? 'Hoạt động' : 'Không hoạt động'
+                .col-md-9
+                    dl.row
+                        dt.col-sm-3 Họ tên:
+                        dd.col-sm-9= account.fullName
+
+                        dt.col-sm-3 Email:
+                        dd.col-sm-9= account.email
+
+                        dt.col-sm-3 Số điện thoại:
+                        dd.col-sm-9= account.phone
+
+                        dt.col-sm-3 Quyền:
+                        dd.col-sm-9= account.role_id
+
+                        dt.col-sm-3 Ngày tạo:
+                        dd.col-sm-9= account.createdAt.toLocaleString('vi-VN')
+
+                        dt.col-sm-3 Ngày cập nhật:
+                        dd.col-sm-9= account.updatedAt.toLocaleString('vi-VN')
+
+        .card-footer.text-end
+            a.btn.btn-secondary(href=`${prefixAdmin}/accounts`) Quay lại

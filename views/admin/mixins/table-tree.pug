@@ -1,0 +1,59 @@
+mixin table-tree(items,level=1)
+    each item,index in items
+        - const prefix=Array(level+1).join("-- ")
+        tr
+            td
+                input(
+                    type="checkbox"
+                    name="id"
+                    value=item.id
+                )
+            td #{item.index}
+            td 
+                img(src=item.thumbnail)
+            td #{prefix}#{item.title}
+            td
+                input(
+                    type="number"
+                    value=item.position
+                    style="width:50px"
+                    min="1"
+                    name="position"
+                )
+            td
+                if(role.permissions.includes("products-category_edit")) 
+                    if(item.status=="active")
+                        a(
+                            href="javascript:" 
+                            class="badge badge-success"
+                            button-change-status
+                            data-status=item.status
+                            data-id=item._id
+                        ) Hoạt động
+                    else
+                        a(
+                            href="javascript:" 
+                            class="badge badge-danger"
+                            button-change-status
+                            data-status=item.status
+                            data-id=item._id
+                        ) Dừng hoạt động
+            td
+                a(
+                    href=`${prefixAdmin}/products-category/detail/${item.id}` 
+                    class="btn btn-sm btn-secondary"
+                    ) Chi tiết
+                if(role.permissions.includes("products-category_edit"))
+                    a(
+                        href=`${prefixAdmin}/products-category/edit/${item.id}` 
+                        class="btn btn-sm btn-warning ml-1  "
+                        ) Sửa
+                if(role.permissions.includes("products-category_delete"))
+                    a(
+                        href="#" 
+                        class="btn btn-sm btn-danger ml-1"
+                        button-delete
+                        data-id=item.id
+                    ) Xoá
+        if item.children && item.children.length >0
+            +table-tree(item.children,level+1)
