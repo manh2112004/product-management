@@ -39,11 +39,13 @@ header.header
                             a(href=`/cart`) Giỏ hàng(0)
                         if(user)
                             li
-                                a(href="/chat") Chat
+                                a(href="/users/friends") Bạn bè
+                            li
+                                a(href="/rooms-chat") Phòng chat
                             li
                                 a(href="/user/logout") Đăng Xuất
                             li
-                                a(href="/user/info") Thông tin tài khoản
+                                a(href="/user/info") #{user.fullName}
                         else
                             li
                                 a(href="/user/login") Đăng Nhập

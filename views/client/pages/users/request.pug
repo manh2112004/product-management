@@ -5,11 +5,11 @@ block main
         include ../../partials/list-btn-user
         .row
             .col-12
-                +box-head("Danh sách người dùng")
-        .row(data-user-not-friend=user.id)
+                +box-head("Lời mời kết bạn đã gửi")
+        .row
             each user in users
-                .col-6(user-id=user.id)
-                    div(class="box-user")
+                .col-6
+                    div(class="box-user add")
                         div(class="inner-avatar")
                             img(
                                 src=(user.avatar?user.avatar:"https://th.bing.com/th/id/OIP.kQyrx9VbuWXWxCVxoreXOgHaHN?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3")

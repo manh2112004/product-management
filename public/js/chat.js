@@ -54,7 +54,7 @@ const showTyping = () => {
   clearTimeout(timeOut);
   timeOut = setTimeout(() => {
     socket.emit("CLIENT_SEND_TYPING", "hidden");
-  }, 3000);
+  }, 1000);
 };
 // insert icon to input
 const emojiPicker = document.querySelector("emoji-picker");
@@ -91,7 +91,7 @@ if (elementListTyping) {
         boxTyping.classList.add("box-typing");
         boxTyping.setAttribute("user-id", data.userID);
         boxTyping.innerHTML = `
-       <div class="inner-name">Le van a</div>
+       <div class="inner-name">${data.fullName}</div>
        <div class="inner-dots">
            <span></span>
            <span></span>

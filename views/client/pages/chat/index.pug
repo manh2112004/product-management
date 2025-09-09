@@ -23,13 +23,6 @@ block main
                                 .inner-content
                                     | #{chat.content}
                         div(class="inner-list-typing")
-                            //- div(class="box-typing")
-                            //-     div(class="inner-name") Le van a
-                            //-     div(class="inner-dots")
-                            //-         span
-                            //-         span
-                            //-         span
-
                     .inner-foot
                         form(class="inner-form" action="")
                             input(
@@ -42,3 +35,6 @@ block main
                                 i.fa-solid.fa-paper-plane
     div(class="tooltip" role="tooltip")
         emoji-picker(class="light")
+
+block script
+    script(type="module" src="/js/chat.js") 
