@@ -3,46 +3,62 @@ include ../../mixins/box-head.pug
 block main
     .product-detail
         .container.my-5
-            .row
-                .col-6
-                    .inner-thumb
-                        img(src=product.thumbnail)
-                .col-6
-                    h1(class="inner-title") #{product.title}
-                    if(product.category)
-                        div(class="inner-category")
-                            span Danh mục:
-                            a(href=`/products/${product.category.slug}`) #{product.category.title}
-                    if(product.priceNew)
-                        div(class="inner-price-new") #{product.priceNew}$
-                    if(product.price)
-                        div(class="inner-price-old") #{product.price}$
-                    if(product.discountPercentage)
-                        div(class="inner-percent") Giảm tới <span>#{product.discountPercentage}%</span>
-                    if(product.stock)
-                        div(class="inner-stock") Còn lại <span>#{product.stock}</span> Sản phẩm
+            .row.g-5.align-items-center
+                .col-md-6
+                    .inner-thumb.position-relative
+                        if product.discountPercentage
+                            span.position-absolute.top-0.start-0.bg-danger.text-white.px-3.py-2.rounded-end.rounded-bottom.fw-bold
+                                | -#{product.discountPercentage}%
+                        img(src=product.thumbnail, alt=product.title, class="img-fluid rounded shadow-sm w-100")
+
+                .col-md-6
+                    h1.fw-bold.mb-3 #{product.title}
+
+                    if product.category
+                        p.text-muted.mb-2
+                            span.me-2.text-secondary
+                                i.fas.fa-tags.me-1
+                                | Danh mục:
+                            a(href=`/products/${product.category.slug}`, class="text-decoration-none text-primary fw-semibold") #{product.category.title}
+
+                    if product.priceNew
+                        .inner-price.mb-3
+                            span.fs-3.text-success.fw-bold #{product.priceNew}$
+                            if product.price
+                                span.text-muted.text-decoration-line-through.ms-3 #{product.price}$
+
+                    if product.stock
+                        p.text-secondary.mb-3
+                            | Còn lại 
+                            span.text-dark.fw-semibold.ms-1 #{product.stock}
+                            |  sản phẩm
+
                     form(
                         action=`/cart/add/${product.id}`
                         method="POST"
+                        class="d-flex align-items-center gap-2"
                     )
-                        input(
-                            class="form-control mb-2"
+                        input.form-control.w-25(
                             type="number"
                             name="quantity"
                             value="1"
                             min="1"
                             max=product.stock
                         )
-                        button(
-                            type="submit"
-                            class="btn btn-success btn-block"
-                        ) Thêm vào giỏ hàng
-        hr
-        .container.my-5
-            .row
-                .col-12
-                    +box-head("Mô tả sản phẩm")
-                    .inner-desc !{product.description}
+                        button.btn.btn-success.btn-sm.shadow(type="submit")
+                            i.fas.fa-cart-plus.me-1
+                            | Thêm vào giỏ hàng
 
-                    
-                        
+                    hr.my-4
+
+                    if product.discountPercentage
+                        p.text-muted.mb-0
+                            | Ưu đãi đặc biệt: 
+                            span.text-danger.fw-bold Giảm tới #{product.discountPercentage}%
+
+        .container.my-5
+            .card.shadow-sm.border-0.rounded-4
+                .card-body
+                    +box-head("Mô tả sản phẩm")
+                    .inner-desc.mt-3
+                        != product.description

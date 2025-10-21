@@ -3,7 +3,6 @@ module.exports.getSubCategory = async (parentId) => {
   const getCategory = async (parentId) => {
     const subs = await productCategory.find({
       parent_id: parentId,
-      status: "active",
       deleted: false,
     });
     let allSub = [...subs];

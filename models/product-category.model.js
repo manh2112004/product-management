@@ -17,10 +17,23 @@ const productCategorySchema = new mongoose.Schema(
       slug: "title",
       unique: true,
     },
+    createdBy: {
+      account_id: String,
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
     deleted: {
       type: Boolean,
       default: false,
     },
+    updatedBy: [
+      {
+        account_id: String,
+        updatedAt: Date,
+      },
+    ],
     deletedAt: Date,
   },
   { timestamps: true }

@@ -5,6 +5,7 @@ if (buttonStatus.length > 0) {
   buttonStatus.forEach((button) => {
     button.addEventListener("click", () => {
       let status = button.getAttribute("button-status");
+      console.log(status);
       if (status) {
         url.searchParams.set("status", status);
       } else {
@@ -180,3 +181,44 @@ if (sort) {
   }
 }
 // end sort
+// change-status
+const buttonChangeStatus = document.querySelectorAll("[button-change-status]");
+if (buttonChangeStatus) {
+  buttonChangeStatus.forEach((button) => {
+    button.addEventListener("click", () => {
+      const dataStatus = button.getAttribute("data-status");
+      const idStatus = button.getAttribute("data-id");
+      const link = `/admin/products-category/changeStatus/${idStatus}/${dataStatus}`;
+      const option = {
+        method: "PATCH",
+      };
+      fetch(link, option)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.code == 200) {
+            button.setAttribute("data-status", data.status);
+            updateButtonUI(button, data.status);
+            document
+              .querySelectorAll(`[data-parent-id="${idStatus}"]`)
+              .forEach((childBtn) => {
+                childBtn.setAttribute("data-status", data.status);
+                updateButtonUI(childBtn, data.status);
+              });
+          } else {
+            alert("cập nhật trạng thái thất bại");
+          }
+        });
+    });
+  });
+}
+function updateButtonUI(button, status) {
+  if (status === "active") {
+    button.classList.remove("bg-danger");
+    button.classList.add("bg-success");
+    button.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> Hoạt động`;
+  } else {
+    button.classList.remove("bg-success");
+    button.classList.add("bg-danger");
+    button.innerHTML = `<i class="fa-solid fa-circle-xmark me-1"></i> Dừng hoạt động`;
+  }
+}

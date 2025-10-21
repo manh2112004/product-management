@@ -1,38 +1,63 @@
 extends ../../layouts/default.pug
 include ../../mixins/showAlert.pug
-
 block main
-    .container.my-5
-        .row.justify-content-center
-            .col-8
-                h1.text-center.mb-4 Thông tin tài khoản
-                .card.shadow-sm.rounded
-                    .card-body.text-center
-                        if user.avatar
-                            img(src=user.avatar, alt="Avatar", class="rounded-circle mb-3", style="width:120px; height:120px; object-fit:cover;")
-                        else
-                            img(src="/images/default-avatar.png", alt="Avatar", class="rounded-circle mb-3", style="width:120px; height:120px; object-fit:cover;")
+    .profile-page.py-5
+        .container
+            .row.justify-content-center
+                .col-lg-8.col-md-10
+                    .card.profile-card.shadow-lg.border-0.rounded-4.overflow-hidden
+                        .card-header.bg-gradient.text-white.text-center.py-4
+                            h2.fw-semibold.mb-0 Thông tin tài khoản
 
-                        h4.mb-3 #{user.fullName}
-
-                        hr
-                        .row.mb-3
-                            .col-sm-4.text-muted.text-start Email:
-                            .col-sm-8.text-start #{user.email}
-                        .row.mb-3
-                            .col-sm-4.text-muted.text-start Trạng thái:
-                            .col-sm-8.text-start
-                                if user.status == 'active'
-                                    span.badge.bg-success Đang hoạt động
+                        .card-body.px-5.py-4.text-center
+                            .avatar-wrapper.mb-3.position-relative.d-inline-block
+                                if user.avatar
+                                    img(src=user.avatar, alt="Avatar", class="rounded-circle shadow avatar-img")
                                 else
-                                    span.badge.bg-secondary Không hoạt động
-                        .row.mb-3
-                            .col-sm-4.text-muted.text-start Ngày tạo:
-                            .col-sm-8.text-start #{user.createdAt.toLocaleString()}
-                        .row.mb-3
-                            .col-sm-4.text-muted.text-start Ngày cập nhật:
-                            .col-sm-8.text-start #{user.updatedAt.toLocaleString()}
+                                    img(src="https://tse1.mm.bing.net/th/id/OIP.Fogk0Q6C7GEQEdVyrbV9MwHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3", alt="Avatar", class="rounded-circle shadow avatar-img")
+                                span.status-indicator.position-absolute.bottom-0.end-0.rounded-circle(
+                                    class=(user.status == 'active' ? 'bg-success' : 'bg-secondary')
+                                )
 
-                    .card-footer.text-end
-                        a.btn.btn-outline-primary(href="/user/edit") Chỉnh sửa
-                        a.btn.btn-outline-danger.ms-2(href="/user/delete") Xóa tài khoản
+                            h4.fw-bold.mb-1 #{user.fullName}
+                            p.text-muted.mb-4 #{user.email}
+
+                            hr.my-4
+
+                            .row.text-start.justify-content-center
+                                .col-sm-10.col-md-8
+                                    .info-item.mb-3
+                                        span.label.text-muted.fw-semibold
+                                            i.fas.fa-envelope.me-2
+                                            | Email:
+                                        span.value.float-end #{user.email}
+
+                                    .info-item.mb-3
+                                        span.label.text-muted.fw-semibold
+                                            i.fas.fa-toggle-on.me-2
+                                            | Trạng thái:
+                                        span.value.float-end
+                                            if user.status == 'active'
+                                                span.badge.bg-success.round-pill.px-3.py-2 Đang hoạt động
+                                            else
+                                                span.badge.bg-secondary.round-pill.px-3.py-2 Không hoạt động
+
+                                    .info-item.mb-3
+                                        span.label.text-muted.fw-semibold
+                                            i.fas.fa-calendar-alt.me-2
+                                            | Ngày tạo:
+                                        span.value.float-end #{user.createdAt.toLocaleString()}
+
+                                    .info-item.mb-3
+                                        span.label.text-muted.fw-semibold
+                                            i.fas.fa-edit.me-2
+                                            | Cập nhật:
+                                        span.value.float-end #{user.updatedAt.toLocaleString()}
+
+                        .card-footer.bg-light.text-end.py-3
+                            a.btn.btn-outline-primary.btn-sm.rounded-pill(href="/user/edit")
+                                i.fas.fa-user-edit.me-1
+                                | Chỉnh sửa
+                            a.btn.btn-outline-danger.btn-sm.rounded-pill.ms-2(href="/user/delete")
+                                i.fas.fa-trash-alt.me-1
+                                | Xóa tài khoản

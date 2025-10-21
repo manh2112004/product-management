@@ -1,32 +1,45 @@
 extends ../../layouts/default.pug
+
+block styles
+    link(rel="stylesheet", href="/admin/css/product-detail.css")
+
 block main
-    .container.mt-5
-        .row
-            .col-md-6
-                img.img-fluid.rounded.shadow(src=product.thumbnail, alt=product.title)
-            .col-md-6
-                h2= product.title
-                p.text-muted.mt-3!= product.description
+    .product-detail.container.mt-5
+        .card.shadow-lg.rounded-lg.overflow-hidden
+            .row.no-gutters
+                .col-md-5
+                    img.product-image.img-fluid(src=product.thumbnail, alt=product.title)
+                .col-md-7
+                    .card-body
+                        h2.product-title.mb-3= product.title
+                        p.product-description.text-muted!= product.description
 
-                h4.text-danger.mt-4
-                    | Giá khuyến mãi: $
-                    = (product.price - product.price * product.discountPercentage / 100).toFixed(2)
-                    small.text-muted.ml-2
-                        del $#{product.price}
-                        span.badge.badge-success.ml-2 #{product.discountPercentage}% OFF
+                        .product-pricing.mt-4
+                            h4.text-danger
+                                | Giá khuyến mãi: $
+                                = (product.price - product.price * product.discountPercentage / 100).toFixed(2)
+                                small.text-muted.ml-2
+                                    del $#{product.price}
+                                    span.badge.badge-success.ml-2 #{product.discountPercentage}% OFF
 
-                p.mt-3
-                    strong Tình trạng:
-                    if product.status === 'active'
-                        span.badge.badge-primary.ml-2 Còn hàng
-                    else
-                        span.badge.badge-secondary.ml-2 Ngừng bán
+                        .product-status.mt-3
+                            p
+                                strong Tình trạng:
+                                if product.status === 'active'
+                                    span.badge.badge-primary.ml-2 Còn hàng
+                                else
+                                    span.badge.badge-secondary.ml-2 Ngừng bán
 
-                p.mt-2
-                    strong Còn lại trong kho:
-                    span.ml-2= product.stock + " sản phẩm"
-                a(
-                    class="btn btn-warning"
-                    href=`${prefixAdmin}/products/edit/${product.id}` 
-                ) Chỉnh sửa
-    script(src="/admin/js/product.js")
+                            p.mt-2
+                                strong Còn lại trong kho:
+                                span.ml-2= `${product.stock} sản phẩm`
+
+                        .mt-4
+                            a.btn.btn-warning.mr-2(
+                                href=`${prefixAdmin}/products/edit/${product.id}`
+                            )
+                                i.fas.fa-edit.mr-2
+                                | Chỉnh sửa
+                            a.btn.btn-secondary(href=`${prefixAdmin}/products`)
+                                i.fas.fa-arrow-left.mr-2
+                                | Quay lại danh sách

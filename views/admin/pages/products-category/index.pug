@@ -8,45 +8,49 @@ include ../../mixins/showAlert.pug
 include ../../mixins/sort.pug
 block main
     if(role.permissions.includes("products-category_view"))
-        h1 Trang danh mục sản phẩm
-        .card.mb-3
-            .card-header Bộ lọc và tìm kiếm
-            .card-body
-                .row
-                    .col-6
-                        +filter-Status(filterStatus)
-        //-             .col-6
-        //-                 +search(keyword)
-        //- .card.mb-3
-        //-     .card-header Sắp xếp
-        //-     .card-body 
-        //-         .row
-        //-             .col-4
-        //-                 +sort()
-        .card.mb-3
-            .card-header Danh sách
-            .card-body
-                .row
-                    .col-8
-                    .col-4
-                        if(role.permissions.includes("products-category_create"))
-                            a(
-                                href=`${prefixAdmin}/products-category/create`
-                                class="btn btn-outline-success"
-                            ) +thêm mới 
-            table(
-                class="table table-hover table-sm"
-                checkbox-multi
+        .d-flex.align-items-center.justify-content-between.mb-4
+            h1.text-primary.fw-bold.mb-0
+                i.fa-solid.fa-layer-group.me-2
+                | Quản lý danh mục sản phẩm
+            if(role.permissions.includes("products-category_create"))
+                a.btn.btn-success.btn-sm.shadow-sm(
+                    href=`${prefixAdmin}/products-category/create`
                 )
-                    thead
-                        tr
-                            th
-                                input(type="checkbox" name="checkall")
-                            th STT
-                            th Hình ảnh
-                            th Tiêu đề
-                            th vị trí
-                            th Trạng thái
-                            th Hành động
+                    i.fa-solid.fa-plus.me-1
+                    | Thêm mới
+        .card.shadow-sm.mb-4.border-0
+            .card-header.bg-light.py-2
+                h6.mb-0.text-secondary.fw-semibold
+                    i.fa-solid.fa-filter.me-2
+                    | Bộ lọc & tìm kiếm
+            .card-body.pt-3
+                .row.g-3
+                    .col-md-6
+                        +filter-Status(filterStatus)
+                    .col-md-6
+                        +search(keyword)
+        .card.shadow-sm.border-0
+            .card-header.bg-light.d-flex.justify-content-between.align-items-center.py-2
+                h6.mb-0.text-secondary.fw-semibold
+                    i.fa-solid.fa-list.me-2
+                    | Danh sách danh mục
+                if(records && records.length)
+                    span.badge.bg-info.text-dark.fw-semibold
+                        | Tổng số: #{records.length}
+
+            .card-body.p-0
+                table.table.table-striped.table-hover.align-middle.mb-0(checkbox-multi)
+                    thead.table-light
+                        tr.text-center.align-middle
+                            th.w-5
+                                input.form-check-input(type="checkbox" name="checkall")
+                            th.text-start.w-45 Tên danh mục
+                            th.w-10 Vị trí
+                            th.w-10 Trạng thái
+                            th.w-15 Người tạo
+                            th.w-15 Cập nhật gần nhất
+                            th.w-10 Hành động
                     tbody
                         +table-tree(records)
+    
+

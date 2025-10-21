@@ -7,124 +7,146 @@ include ../../mixins/showAlert.pug
 include ../../mixins/sort.pug
 block main
     +showAlert(5000)
-    h1 Trang sản phẩm
-    .card.mb-3
-        .card-header Bộ lọc và tìm kiếm
+    h1.text-primary.mb-4
+        i.fa-solid.fa-box-open.me-2
+        | Trang sản phẩm
+
+    .card.shadow-sm.border-0.mb-3
+        .card-header.bg-light.fw-semibold
+            i.fa-solid.fa-filter.me-2
+            | Bộ lọc & Tìm kiếm
         .card-body
-            .row
-                .col-6
+            .row.g-3
+                .col-md-6
                     +filter-Status(filterStatus)
-                .col-6
+                .col-md-6
                     +search(keyword)
-    .card.mb-3
-        .card-header Sắp xếp
-        .card-body 
-            .row
-                .col-4
-                    +sort()
-    .card.mb-3
-        .card-header Danh sách
+
+    .card.shadow-sm.border-0.mb-3
+        .card-header.bg-light.fw-semibold
+            i.fa-solid.fa-arrow-up-wide-short.me-2
+            | Sắp xếp
         .card-body
-            .row
-                .col-8
-                    +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
-                .col-4
-                    a(
-                        href=`${prefixAdmin}/products/create`
-                        class="btn btn-outline-success"
-                    ) +Thêm mới
-        table(
-            class="table table-hover table-sm"
-            checkbox-multi
-        )
-            thead
-                tr
-                    th
-                        input(type="checkbox" name="checkall")
-                    th STT
-                    th Hình ảnh
-                    th Tiêu đề
-                    th Giá
-                    th vị trí
-                    th Trạng thái
-                    th Người tạo
-                    th Người cập nhật gần nhất
-                    th Hành động
-            tbody
-                each item,index in products
+            .row.g-3
+                .col-md-4
+                    +sort()
+
+    .card.shadow-sm.border-0.mb-3
+        .card-header.bg-light.fw-semibold.d-flex.justify-content-between.align-items-center
+            span
+                i.fa-solid.fa-list.me-2
+                | Danh sách sản phẩm
+            a(
+                href=`${prefixAdmin}/products/create`
+                class="btn btn-success btn-sm rounded-pill"
+                title="Thêm sản phẩm mới"
+            )
+                i.fa-solid.fa-plus
+                |  Thêm mới
+        .card-body.p-0
+            table.table.table-hover.align-middle.mb-0(checkbox-multi)
+                thead.table-light
                     tr
-                    td
-                        input(
-                            type="checkbox"
-                            name="id"
-                            value=item.id
-                        )
-                    td #{index+1}
-                    td 
-                        img(src=item.thumbnail)
-                    td #{item.title}
-                    td #{item.price}$
-                    td
-                        input(
-                            type="number"
-                            value=item.position
-                            style="width:50px"
-                            min="1"
-                            name="position"
-                        )
-                    td 
-                        if(item.status=="active")
-                            a(
-                                href="javascript:" 
-                                class="badge badge-success"
-                                button-change-status
-                                data-status=item.status
-                                data-id=item._id
-                            ) Hoạt động
-                        else
-                            a(
-                                href="javascript:" 
-                                class="badge badge-danger"
-                                button-change-status
-                                data-status=item.status
-                                data-id=item._id
-                            ) Dừng hoạt động
-                    td 
-                        p #{item.accountFullName}
-                        p #{moment(item.createdBy.createdAt).format("DD/MM/YYYY hh:mm:ss")}
-                    td 
-                        -const updateBy=item.updatedBy.slice(-1)[0]
-                        if(updateBy)
-                            p #{updateBy.accountFullName}
-                            p #{moment(updateBy.updatedAt).format("DD/MM/YYYY hh:mm:ss")}
-                    td
-                        a(
-                            href=`${prefixAdmin}/products/detail/${item.id}` 
-                            class="btn btn-sm btn-secondary"
-                            ) Chi tiết
-                        a(
-                            href=`${prefixAdmin}/products/edit/${item.id}` 
-                            class="btn btn-sm btn-warning ml-1  "
-                            ) Sửa
-                        a(
-                            href="#" 
-                            class="btn btn-sm btn-danger ml-1"
-                            button-delete
-                            data-id=item.id
-                        ) Xoá
+                        th(style="width:40px")
+                            input.form-check-input(type="checkbox" name="checkall")
+                        th STT
+                        th Hình ảnh
+                        th Tiêu đề
+                        th Giá
+                        th Vị trí
+                        th Trạng thái
+                        th Người tạo
+                        th Người cập nhật
+                        th Hành động
+                tbody
+                    each item, index in products
+                        tr
+                            td
+                                input.form-check-input(
+                                    type="checkbox"
+                                    name="id"
+                                    value=item.id
+                                )
+                            td #{index + 1}
+                            td 
+                                img.rounded(
+                                    src=item.thumbnail,
+                                    alt="product",
+                                    width="60",
+                                    height="60",
+                                    style="object-fit:cover"
+                                )
+                            td #{item.title}
+                            td.text-success.fw-semibold #{item.price}$
+                            td
+                                input.form-control.form-control-sm.text-center(
+                                    type="number"
+                                    value=item.position
+                                    style="width:70px"
+                                    min="1"
+                                    name="position"
+                                )
+                            td
+                                if item.status == "active"
+                                    span.badge.bg-success(
+                                        button-change-status
+                                        data-status=item.status
+                                        data-id=item._id
+                                        style="cursor:pointer"
+                                    ) 
+                                        i.fa-solid.fa-circle-check.me-1
+                                        | Hoạt động
+                                else
+                                    span.badge.bg-danger(
+                                        button-change-status
+                                        data-status=item.status
+                                        data-id=item._id
+                                        style="cursor:pointer"
+                                    ) 
+                                        i.fa-solid.fa-circle-xmark.me-1
+                                        | Dừng Hoạt Động
+                            td.small.text-muted
+                                p.mb-0 #{item.accountFullName}
+                                p.mb-0 #{moment(item.createdBy.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+                            td.small.text-muted
+                                - const updateBy = item.updatedBy.slice(-1)[0]
+                                if updateBy
+                                    p.mb-0 #{updateBy.accountFullName}
+                                    p.mb-0 #{moment(updateBy.updatedAt).format("DD/MM/YYYY HH:mm:ss")}
+                            td.text-center
+                                a(
+                                    href=`${prefixAdmin}/products/detail/${item.id}`
+                                    class="btn btn-sm btn-outline-secondary me-1"
+                                    title="Chi tiết"
+                                )
+                                    i.fa-solid.fa-eye
+                                a(
+                                    href=`${prefixAdmin}/products/edit/${item.id}`
+                                    class="btn btn-sm btn-outline-warning me-1"
+                                    title="Chỉnh sửa"
+                                )
+                                    i.fa-solid.fa-pen-to-square
+                                a(
+                                    href="#"
+                                    class="btn btn-sm btn-outline-danger"
+                                    button-delete
+                                    data-id=item.id
+                                    title="Xoá"
+                                )
+                                    i.fa-solid.fa-trash
+
     +pagination(pagination)
+
     form(
-        action="",
+        action=""
         method="POST"
         id="form-change-status"
         data-path=`${prefixAdmin}/products/change-status`
-        )
+    )
     form(
-        action="",
+        action=""
         method="POST"
         id="form-delete-item"
         data-path=`${prefixAdmin}/products/delete`
-        )
+    )
     script(src="/admin/js/product.js")
-
-        

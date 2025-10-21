@@ -1,59 +1,75 @@
-mixin table-tree(items,level=1)
-    each item,index in items
-        - const prefix=Array(level+1).join("-- ")
-        tr
+mixin table-tree(items, level = 1)
+    each item, index in items
+        tr.text-center.align-middle
             td
-                input(
-                    type="checkbox"
-                    name="id"
-                    value=item.id
-                )
-            td #{item.index}
-            td 
-                img(src=item.thumbnail)
-            td #{prefix}#{item.title}
+                input.form-check-input(type="checkbox" name="id" value=item.id)
+            td.text-start
+                span(style=`margin-left:${(level - 1) * 15}px`)
+                    if level > 1
+                        i(class="fa-solid fa-angles-right text-secondary me-1")
+                    | #{item.title}
             td
-                input(
+                input.form-control.form-control-sm.text-center.mx-auto(
                     type="number"
                     value=item.position
-                    style="width:50px"
                     min="1"
                     name="position"
+                    style="width:60px"
                 )
             td
-                if(role.permissions.includes("products-category_edit")) 
-                    if(item.status=="active")
-                        a(
-                            href="javascript:" 
-                            class="badge badge-success"
+                if (role.permissions.includes("products-category_edit"))
+                    if (item.status == "active")
+                        span.badge.bg-success.text-white.px-2.py-1(
                             button-change-status
                             data-status=item.status
                             data-id=item._id
-                        ) Hoạt động
+                            data-parent-id=item.parent_id
+                            style="cursor:pointer"
+                        )
+                            i.fa-solid.fa-circle-check.me-1
+                            | Hoạt động
                     else
-                        a(
-                            href="javascript:" 
-                            class="badge badge-danger"
+                        span.badge.bg-danger.text-white.px-2.py-1(
                             button-change-status
                             data-status=item.status
                             data-id=item._id
-                        ) Dừng hoạt động
-            td
-                a(
-                    href=`${prefixAdmin}/products-category/detail/${item.id}` 
-                    class="btn btn-sm btn-secondary"
-                    ) Chi tiết
+                            data-parent-id=item.parent_id
+                            style="cursor:pointer"
+                        )
+                            i.fa-solid.fa-circle-xmark.me-1
+                            | Dừng hoạt động
+                else
+                    span.text-muted #{item.status}
+
+            td.small.text-muted
+                p.mb-0.fw-semibold #{item.accountFullName}
+                p.mb-0 #{moment(item.createdBy.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+            td.small.text-muted
+                - const updateBy = item.updatedBy.slice(-1)[0]
+                if updateBy
+                    p.mb-0.fw-semibold #{updateBy.accountFullName}
+                    p.mb-0 #{moment(updateBy.updatedAt).format("DD/MM/YYYY HH:mm:ss")}
+                else
+                    span.text-muted Chưa cập nhật
+            td.text-nowrap
+                a.btn.btn-sm.btn-outline-secondary.me-1(
+                    href=`${prefixAdmin}/products-category/detail/${item.id}`
+                    title="Chi tiết"
+                )
+                    i.fa-solid.fa-eye
                 if(role.permissions.includes("products-category_edit"))
-                    a(
-                        href=`${prefixAdmin}/products-category/edit/${item.id}` 
-                        class="btn btn-sm btn-warning ml-1  "
-                        ) Sửa
+                    a.btn.btn-sm.btn-outline-warning.me-1(
+                        href=`${prefixAdmin}/products-category/edit/${item.id}`
+                        title="Chỉnh sửa"
+                    )
+                        i.fa-solid.fa-pen-to-square
                 if(role.permissions.includes("products-category_delete"))
-                    a(
-                        href="#" 
-                        class="btn btn-sm btn-danger ml-1"
+                    a.btn.btn-sm.btn-outline-danger(
+                        href="#"
                         button-delete
                         data-id=item.id
-                    ) Xoá
-        if item.children && item.children.length >0
-            +table-tree(item.children,level+1)
+                        title="Xoá"
+                    )
+                        i.fa-solid.fa-trash
+        if item.children && item.children.length > 0
+            +table-tree(item.children, level + 1)

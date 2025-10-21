@@ -16,7 +16,7 @@ module.exports.index = async (req, res) => {
     status: "active",
   })
     .sort({ position: "desc" })
-    .limit(6);
+    .limit(8);
   const productNewPrice = productHelper.priceNewProducts(productNew);
   // kết thúc sản phẩm mới nhất
   res.render("client/pages/home/index.pug", {

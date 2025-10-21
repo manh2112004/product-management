@@ -1,14 +1,19 @@
 // showAlert
 const showAlert = document.querySelector("[showAlert]");
 if (showAlert) {
-  const time = parseInt(showAlert.getAttribute("data-time"));
+  const time = parseInt(showAlert.getAttribute("data-time")) || 3000;
   const closeAlert = showAlert.querySelector("[close-alert]");
-  console.log(close);
   setTimeout(() => {
     showAlert.classList.add("alertHidden");
+    setTimeout(() => showAlert.remove(), 500);
   }, time);
-  closeAlert.addEventListener("click", () => {
-    showAlert.classList.add("alertHidden");
-  });
+
+  // Khi người dùng click nút X
+  if (closeAlert) {
+    closeAlert.addEventListener("click", () => {
+      showAlert.classList.add("alertHidden");
+      setTimeout(() => showAlert.remove(), 300);
+    });
+  }
 }
 // end showAlert

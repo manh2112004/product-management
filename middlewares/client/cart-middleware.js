@@ -1,5 +1,4 @@
 const Cart = require("../../models/cart.model");
-
 module.exports.cartID = async (req, res, next) => {
   try {
     if (!req.cookies.cartID) {

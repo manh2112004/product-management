@@ -1,14 +1,21 @@
 mixin product-item(item)
-    if(miniCart)
-        .col-3.mb-3
-            .product-item
-                .inner-image
-                    img(src=item.thumbnail,alt=item.title)
-                    if(item.featured=="1")
-                        .inner-featured Nổi bật
-                .inner-content
-                    a(href=`/products/detail/${item.slug}`) #{item.title}
-                    .inner-price-new #{item.priceNew}$
-                    .inner-price-old #{item.price}$
-                    .inner-discount #{item.discountPercentage}%
+    .product-card
+        .product-image
+            a(href=`/products/detail/${item.slug}`)
+                img(src=item.thumbnail, alt=item.title)
+                if (item.featured == "1")
+                    .badge.featured Nổi bật
+        .product-info
+            a.product-title(href=`/products/detail/${item.slug}`) #{item.title}
+            .product-prices
+                span.price-new #{item.priceNew}$
+                span.price-old #{item.price}$
+                span.discount -#{item.discountPercentage}%
+        .product-actions
+            form(action=`/cart/add/${item.id}` method="POST" class="add-to-cart-form")
+                input(type="hidden" name="quantity" value="1")
+                button.btn-add-cart(type="submit" title="Thêm vào giỏ hàng")
+                    i.fas.fa-shopping-cart
+            a.btn-view-detail(href=`/products/detail/${item.slug}` title="Xem chi tiết")
+                i.fas.fa-eye
 

@@ -1,0 +1,59 @@
+extends ../../layouts/default.pug
+block main
+    .container.mt-4
+        h2.text-center.text-primary.mb-4 #{pageTitle}
+        .card.shadow-sm.p-4
+            h4.text-secondary.mb-3 Thông tin danh mục
+            table.table.table-bordered
+                tbody
+                    tr
+                        th(style="width: 200px;") Tên danh mục
+                        td #{category.title}
+                    tr
+                        th Danh mục cha
+                        td #{category.parent_id ? category.parent_id : "Không có"}
+                    tr
+                        th Mô tả
+                        td #{category.description || "Chưa có mô tả"}
+                    tr
+                        th Trạng thái
+                        td 
+                            if category.status === "active"
+                                span.badge.badge-success Hoạt động
+                            else
+                                span.badge.badge-secondary Ẩn
+                    tr
+                        th Vị trí
+                        td #{category.position}
+                    tr
+                        th Slug
+                        td #{category.slug}
+                    tr
+                        th Ngày tạo
+                        td #{category.createdAt.toLocaleString()}
+                    tr
+                        th Ngày cập nhật gần nhất
+                        td #{category.updatedAt.toLocaleString()}
+
+            hr
+
+            h4.text-secondary.mb-3 Lịch sử cập nhật
+            if lastUpdate
+                table.table.table-sm
+                    tbody
+                        tr
+                            th(style="width: 200px;") ID người cập nhật
+                            td #{lastUpdate.account_id}
+                        tr
+                            th Thời gian cập nhật
+                            td #{lastUpdate.updatedAt.toLocaleString()}
+            else
+                p.text-muted Chưa có bản ghi cập nhật nào
+
+            .mt-4
+                a.btn.btn-secondary(href="/admin/products-category") 
+                    i.fa-solid.fa-arrow-left.mr-2
+                    | Quay lại danh sách
+                a.btn.btn-primary.ml-2(href=`/admin/products-category/edit/${category._id}`)
+                    i.fa-solid.fa-pen.mr-2
+                    | Chỉnh sửa

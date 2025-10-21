@@ -60,11 +60,55 @@
 }
 /* end layouts */
 /* Product */
-table.table img {
-  width: 60px;
-  height: auto;
-  border-radius: 5px;
-  object-fit: cover;
+/* Hiệu ứng hover mượt và không che checkbox */
+.table-hover tbody tr:hover {
+  background-color: #f9fafb;
+  transition: all 0.15s ease-in-out;
+}
+
+.table input[type="checkbox"] {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Icon hiệu ứng */
+.btn i {
+  transition: transform 0.2s ease;
+}
+
+.btn:hover i {
+  transform: scale(1.15);
+}
+
+/* Làm đẹp badge trạng thái */
+.badge {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.card {
+  border-radius: 12px !important;
+}
+
+.card-header {
+  font-weight: 600;
+}
+
+h1 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+td.text-center a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 3px;
+}
+
+td.text-center {
+  white-space: nowrap;
 }
 /* end product */
 /* show alert */
@@ -131,3 +175,72 @@ table.table img {
   display: none;
 }
 /* end image preview */
+/* Toàn trang không bị tràn ngang */
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Bố cục sản phẩm */
+.product-detail .card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* Ảnh sản phẩm */
+.product-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+/* Tiêu đề sản phẩm */
+.product-title {
+  font-weight: 700;
+  color: #333;
+}
+
+/* Mô tả sản phẩm */
+.product-description {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Giá khuyến mãi */
+.product-pricing h4 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.product-pricing del {
+  color: #888;
+}
+
+/* Badge */
+.badge {
+  font-size: 13px;
+  padding: 5px 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-detail .row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-image {
+    border-bottom: 1px solid #eee;
+  }
+
+  .product-title {
+    font-size: 20px;
+  }
+
+  .product-pricing h4 {
+    font-size: 18px;
+  }
+}

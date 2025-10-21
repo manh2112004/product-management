@@ -22,4 +22,6 @@ router.patch(
   validate.createPost,
   controller.editPath
 );
+router.patch("/changeStatus/:id/:status", controller.changeStatus);
+router.get("/detail/:id", controller.detail);
 module.exports = router;

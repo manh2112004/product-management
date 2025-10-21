@@ -4,9 +4,16 @@ const productHelper = require("../../helpers/product");
 const getSubCategoryHelper = require("../../helpers/products-category");
 // [GET] /products
 module.exports.index = async (req, res) => {
+  const activeCategories = await productCategory
+    .find({
+      status: "active",
+      deleted: false,
+    })
+    .select("_id");
   const products = await Product.find({
     status: "active",
     deleted: false,
+    product_category_id: { $in: activeCategories.map((c) => c._id) },
   }).sort({ position: "desc" });
   const newProducts = productHelper.priceNewProducts(products);
   res.render("client/pages/products/index.pug", {
