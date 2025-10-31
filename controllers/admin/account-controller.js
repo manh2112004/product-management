@@ -104,3 +104,18 @@ module.exports.detail = async (req, res) => {
     account: account,
   });
 };
+module.exports.deleteAccount = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Account.updateOne({ _id: id }, { deleted: true });
+    res.json({
+      code: 200,
+      message: "Xoá tài khoản thành công",
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Xoá tài khoản không thành công",
+    });
+  }
+};

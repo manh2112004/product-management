@@ -138,16 +138,20 @@ if (uploadImage) {
     "[upload-image-preview]"
   );
   const uploadImageButton = uploadImage.querySelector("[upload-image-button]");
+
   uploadImageInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (file) {
       uploadImagePreview.src = URL.createObjectURL(file);
+      uploadImagePreview.style.display = "block";
       uploadImageButton.style.display = "block";
     }
   });
+
   uploadImageButton.addEventListener("click", () => {
     uploadImageInput.value = "";
     uploadImagePreview.src = "";
+    uploadImagePreview.style.display = "none";
     uploadImageButton.style.display = "none";
   });
 }
@@ -181,44 +185,33 @@ if (sort) {
   }
 }
 // end sort
-// change-status
-const buttonChangeStatus = document.querySelectorAll("[button-change-status]");
-if (buttonChangeStatus) {
-  buttonChangeStatus.forEach((button) => {
+//delete account
+const buttonDeleteAccount = document.querySelectorAll(
+  "[button-delete-account]"
+);
+if (buttonDeleteAccount) {
+  buttonDeleteAccount.forEach((button) => {
     button.addEventListener("click", () => {
-      const dataStatus = button.getAttribute("data-status");
-      const idStatus = button.getAttribute("data-id");
-      const link = `/admin/products-category/changeStatus/${idStatus}/${dataStatus}`;
+      const accountId = button.getAttribute("data-id");
+      const link = `/admin/accounts/delete/${accountId}`;
       const option = {
-        method: "PATCH",
+        method: "GET",
       };
-      fetch(link, option)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.code == 200) {
-            button.setAttribute("data-status", data.status);
-            updateButtonUI(button, data.status);
-            document
-              .querySelectorAll(`[data-parent-id="${idStatus}"]`)
-              .forEach((childBtn) => {
-                childBtn.setAttribute("data-status", data.status);
-                updateButtonUI(childBtn, data.status);
-              });
-          } else {
-            alert("cập nhật trạng thái thất bại");
-          }
-        });
+      if (confirm("Bạn có chắc muốn xoá tài khoản này không?"))
+        fetch(link, option)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.code == 200) {
+              const row = document.querySelector(`tr[data-id="${accountId}"]`);
+              if (row) {
+                row.remove();
+              }
+              alert(data.message);
+            } else {
+              alert(data.message);
+            }
+          });
     });
   });
 }
-function updateButtonUI(button, status) {
-  if (status === "active") {
-    button.classList.remove("bg-danger");
-    button.classList.add("bg-success");
-    button.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> Hoạt động`;
-  } else {
-    button.classList.remove("bg-success");
-    button.classList.add("bg-danger");
-    button.innerHTML = `<i class="fa-solid fa-circle-xmark me-1"></i> Dừng hoạt động`;
-  }
-}
+// end delete account

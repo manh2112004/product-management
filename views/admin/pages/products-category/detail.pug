@@ -11,7 +11,7 @@ block main
                         td #{category.title}
                     tr
                         th Danh mục cha
-                        td #{category.parent_id ? category.parent_id : "Không có"}
+                        td #{category.titleParent.title ? category.titleParent.title : "Không có"}
                     tr
                         th Mô tả
                         td #{category.description || "Chưa có mô tả"}
@@ -42,11 +42,14 @@ block main
                 table.table.table-sm
                     tbody
                         tr
-                            th(style="width: 200px;") ID người cập nhật
-                            td #{lastUpdate.account_id}
+                            th(style="width: 200px;") Tên người cập nhật
+                            td #{lastUpdate.userName.fullName}
                         tr
                             th Thời gian cập nhật
-                            td #{lastUpdate.updatedAt.toLocaleString()}
+                            if lastUpdate.updatedAt
+                                td #{lastUpdate.updatedAt.toLocaleString()}
+                            else
+                                td.text-muted Chưa cập nhật
             else
                 p.text-muted Chưa có bản ghi cập nhật nào
 

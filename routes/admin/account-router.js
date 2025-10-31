@@ -23,4 +23,5 @@ router.patch(
   controller.editPatch
 );
 router.get("/detail/:id", controller.detail);
+router.get("/delete/:id", controller.deleteAccount);
 module.exports = router;

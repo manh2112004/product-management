@@ -244,3 +244,70 @@ body {
     font-size: 18px;
   }
 }
+/* preview ảnh */
+.image-preview {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  display: none;
+  object-fit: cover;
+  margin-top: 10px;
+}
+/* trang quản lý đơn hàng */
+.order-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+.table th {
+  background-color: #007bff;
+  color: white;
+}
+.btn-group .btn {
+  border-radius: 6px !important;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Nút “Chưa Xác Nhận” - màu vàng */
+.btn-outline-warning {
+  color: #b8860b;
+  border-color: #ffc107;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-warning.active {
+  background-color: #ffc107;
+  color: #fff;
+  border-color: #e0a800;
+  box-shadow: 0 0 6px rgba(255, 193, 7, 0.4);
+}
+
+/* Nút “Đã Xác Nhận” - màu xanh */
+.btn-outline-success {
+  color: #198754;
+  border-color: #198754;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success.active {
+  background-color: #198754;
+  color: #fff;
+  border-color: #157347;
+  box-shadow: 0 0 6px rgba(25, 135, 84, 0.4);
+}
+
+/* Giữa hai nút có khoảng cách nhỏ */
+.btn-group .btn + .btn {
+  margin-left: 5px;
+}
+
+/* Responsive nhỏ gọn trên mobile */
+@media (max-width: 768px) {
+  .btn-group .btn {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.6rem;
+  }
+}

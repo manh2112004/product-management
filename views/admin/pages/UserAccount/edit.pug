@@ -1,0 +1,89 @@
+extends ../../layouts/default.pug
+include ../../mixins/showAlert.pug
+block main
+    h1.mb-4 Sửa tài khoản User
+    +showAlert(5000)
+    form(
+        action=`${prefixAdmin}/UserAccount/edit/${user._id}?_method=PATCH`
+        method="POST"
+        enctype="multipart/form-data"
+    )
+        div.form-group
+            label(for="fullName") Họ tên *
+            input.form-control(
+                type="text"
+                id="fullName"
+                name="fullName"
+                value=user.fullName
+                required
+            )
+        div.form-group
+            label(for="email") Email *
+            input.form-control(
+                type="email"
+                id="email"
+                name="email"
+                value=user.email
+                required
+            )
+        div.form-group
+            label(for="password") Mật khẩu *
+            input.form-control(
+                type="password"
+                id="password"
+                name="password"
+            )
+        div.form-group(upload-image)
+            label(for="avatar") Avatar
+            input.form-control(
+                type="file"
+                id="avatar"
+                name="avatar"
+                accept="image/*"
+                upload-image-input
+            )
+            if user.avatar
+                img.image-preview.mt-2(
+                    src=user.avatar
+                    alt="Avatar Preview"
+                    upload-image-preview
+                )
+                button.btn.btn-danger.mt-2(
+                    type="button"
+                    upload-image-button
+                ) Xóa ảnh
+            else
+                img.image-preview.mt-2(
+                    src=""
+                    alt="Avatar Preview"
+                    style="display:none;"
+                    upload-image-preview
+                )
+                button.btn.btn-danger.mt-2(
+                    type="button"
+                    style="display:none;"
+                    upload-image-button
+                ) Xóa ảnh
+        div.form-group
+            label Trạng thái
+            div.form-check
+                input.form-check-input(
+                    type="radio"
+                    id="statusActive"
+                    name="status"
+                    value="active"
+                    checked=(user.status=="active"?true:false)
+                )
+                label.form-check-label(for="statusActive") Hoạt động
+
+            div.form-check
+                input.form-check-input(
+                    type="radio"
+                    id="statusInActive"
+                    name="status"
+                    value="inactive"
+                    checked=(user.status=="inactive"?true:false)
+                )
+                label.form-check-label(for="statusInActive") Dừng Hoạt động
+        div.form-group.mt-3
+            button.btn.btn-primary(type="submit") Cập nhật

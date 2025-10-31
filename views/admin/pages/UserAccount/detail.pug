@@ -1,0 +1,134 @@
+extends ../../layouts/default.pug
+include ../../mixins/showAlert.pug
+
+block main
+    +showAlert(5000)
+
+    // Tiêu đề trang
+    h1.text-primary.mb-4
+        i.fa-solid.fa-user-circle.me-2
+        | Chi tiết tài khoản User
+
+    // Thông tin cơ bản của User
+    .card.shadow-sm.border-0.mb-4
+        .card-header.bg-light.fw-semibold
+            i.fa-solid.fa-id-card.me-2
+            | Thông tin người dùng
+        .card-body
+            .row
+                .col-md-3.text-center
+                    if user.avatar
+                        img.rounded-circle.shadow-sm(
+                            src=user.avatar
+                            alt=user.fullName
+                            style="width:120px;height:120px;object-fit:cover;"
+                        )
+                    else
+                        img.rounded-circle.shadow-sm(
+                            src="https://tse1.mm.bing.net/th/id/OIP.Fogk0Q6C7GEQEdVyrbV9MwHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="No avatar"
+                            style="width:120px;height:120px;object-fit:cover;"
+                        )
+                    p.mt-2.text-muted.mb-0 #{user.fullName}
+                    span.badge(
+                        class=user.status == "active" ? "bg-success" : "bg-danger"
+                    )
+                        i.fa-solid.fa-circle.me-1
+                        | #{user.status == "active" ? "Hoạt động" : "Dừng hoạt động"}
+                    br
+                    if user.statusOnline == "online"
+                        span.text-success.fw-semibold.mt-2.d-block
+                            i.fa-solid.fa-signal.me-1
+                            | Online
+                    else
+                        span.text-muted.mt-2.d-block
+                            i.fa-solid.fa-signal-slash.me-1
+                            | Offline
+                .col-md-9
+                    table.table.table-borderless.mb-0
+                        tbody
+                            tr
+                                th(scope="row" style="width:150px") Họ và tên:
+                                td #{user.fullName}
+                            tr
+                                th Email:
+                                td #{user.email}
+                            tr
+                                th Token User:
+                                td #{user.tokenUser}
+                            tr
+                                th Ngày tạo:
+                                td #{new Date(user.createdAt.$date).toLocaleString()}
+                            tr
+                                th Cập nhật lần cuối:
+                                td #{new Date(user.updatedAt.$date).toLocaleString()}
+                            tr
+                                th Đã xoá:
+                                td
+                                    if user.deleted
+                                        span.text-danger Có
+                                    else
+                                        span.text-success Không
+
+    // Danh sách yêu cầu kết bạn
+    .card.shadow-sm.border-0.mb-4
+        .card-header.bg-light.fw-semibold
+            i.fa-solid.fa-user-plus.me-2
+            | Danh sách yêu cầu kết bạn (#{acceptFriends.length})
+        .card-body
+            if acceptFriends.length > 0
+                .row
+                    each friend in acceptFriends
+                        .col-md-3.mb-3
+                            .card.text-center.shadow-sm.border-0
+                                .card-body
+                                    if friend.avatar
+                                        img.rounded-circle.mb-2(
+                                            src=friend.avatar
+                                            alt=friend.fullName
+                                            style="width:80px;height:80px;object-fit:cover;"
+                                        )
+                                    else
+                                        img.rounded-circle.mb-2(
+                                            src="https://tse1.mm.bing.net/th/id/OIP.Fogk0Q6C7GEQEdVyrbV9MwHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3"
+                                            alt="No avatar"
+                                            style="width:80px;height:80px;object-fit:cover;"
+                                        )
+                                    h6.mb-0 #{friend.fullName}
+            else
+                p.text-muted.mb-0 Không có yêu cầu kết bạn nào.
+
+    // Danh sách bạn bè
+    .card.shadow-sm.border-0
+        .card-header.bg-light.fw-semibold
+            i.fa-solid.fa-user-group.me-2
+            | Danh sách bạn bè (#{friendList.length})
+        .card-body
+            if friendList.length > 0
+                .row
+                    each friend in friendList
+                        .col-md-3.mb-3
+                            .card.text-center.shadow-sm.border-0
+                                .card-body
+                                    if friend.avatar
+                                        img.rounded-circle.mb-2(
+                                            src=friend.avatar
+                                            alt=friend.fullName
+                                            style="width:80px;height:80px;object-fit:cover;"
+                                        )
+                                    else
+                                        img.rounded-circle.mb-2(
+                                            src="https://tse1.mm.bing.net/th/id/OIP.Fogk0Q6C7GEQEdVyrbV9MwHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3"
+                                            alt="No avatar"
+                                            style="width:80px;height:80px;object-fit:cover;"
+                                        )
+                                    h6.mb-0 #{friend.fullName}
+            else
+                p.text-muted.mb-0 Không có bạn bè nào.
+
+    .mt-4
+        a.btn.btn-outline-secondary.rounded-pill(
+            href=`${prefixAdmin}/UserAccount`
+        )
+            i.fa-solid.fa-arrow-left.me-1
+            | Quay lại danh sách

@@ -1,0 +1,122 @@
+extends ../../layouts/default.pug
+include ../../mixins/search.pug
+include ../../mixins/pagination.pug
+include ../../mixins/form-change-multi.pug
+include ../../mixins/showAlert.pug
+include ../../mixins/sort.pug
+
+block main
+    +showAlert(5000)
+    h1.text-primary.mb-4
+        i.fa-solid.fa-users.me-2
+        | Trang User Account
+
+    //- Bộ lọc & tìm kiếm
+    .card.shadow-sm.border-0.mb-3
+        .card-header.bg-light.fw-semibold
+            i.fa-solid.fa-filter.me-2
+            | Bộ lọc & Tìm kiếm
+        .card-body
+            .row.g-3
+                .col-md-6
+                    +search(keyword)
+
+    //- Danh sách User
+    .card.shadow-sm.border-0
+        .card-header.bg-light.fw-semibold.d-flex.justify-content-between.align-items-center
+            span
+                i.fa-solid.fa-list.me-2
+                | Danh sách User
+        .card-body.p-0
+            table.table.table-striped.table-hover.align-middle.mb-0
+                thead.table-light
+                    tr
+                        th(style="width:40px")
+                            input.form-check-input(type="checkbox" name="checkall")
+                        th.text-center STT
+                        th.text-center Ảnh đại diện
+                        th Full Name
+                        th Email
+                        th.text-center Status
+                        th.text-center Online
+                        th.text-center Updated At
+                        th.text-center Deleted By
+                        th.text-center Hành động
+                tbody
+                    each user, index in accountUser
+                        tr
+                            td.text-center
+                                input.form-check-input(
+                                    type="checkbox"
+                                    name="id"
+                                    value=user._id
+                                )
+                            td.text-center #{index + 1}
+                            td.text-center
+                                if user.avatar
+                                    img(
+                                        src=user.avatar
+                                        alt="Avatar"
+                                        class="rounded-circle border"
+                                        style="width:45px; height:45px; object-fit:cover;"
+                                    )
+                                else
+                                    img(
+                                        src="https://tse1.mm.bing.net/th/id/OIP.Fogk0Q6C7GEQEdVyrbV9MwHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3"
+                                        alt="Default Avatar"
+                                        class="rounded-circle border"
+                                        style="width:45px; height:45px; object-fit:cover;"
+                                    )
+                            td #{user.fullName}
+                            td #{user.email}
+                            td.text-center
+                                if user.status == "active"
+                                    span.badge.bg-success(
+                                        button-change-status
+                                        data-status=user.status
+                                        data-id=user._id
+                                        style="cursor:pointer"
+                                    ) 
+                                        i.fa-solid.fa-circle-check.me-1
+                                        | Hoạt động
+                                else
+                                    span.badge.bg-danger(
+                                        button-change-status
+                                        data-status=user.status
+                                        data-id=user._id
+                                        style="cursor:pointer"
+                                    ) 
+                                        i.fa-solid.fa-circle-xmark.me-1
+                                        | Dừng hoạt động
+                            td.text-center
+                                if user.statusOnline == "online"
+                                    span.text-success.fw-semibold Online
+                                else
+                                    span.text-muted Offline
+                            td.text-center #{new Date(user.updatedAt).toLocaleString()}
+                            td.text-center #{new Date(user.deletedBy.deletedAt).toLocaleString()}
+                            td.text-center
+                                a(
+                                    href=`${prefixAdmin}/UserAccount/detail/${user._id}`
+                                    class="btn btn-sm btn-outline-info me-1"
+                                    title="Xem chi tiết"
+                                )
+                                    i.fa-solid.fa-eye
+                                a(
+                                    href=`${prefixAdmin}/UserAccount/edit/${user._id}`
+                                    class="btn btn-sm btn-outline-warning me-1"
+                                    title="Chỉnh sửa"
+                                )
+                                    i.fa-solid.fa-pen-to-square
+                                a(
+                                    href="#"
+                                    class="btn btn-sm btn-outline-danger"
+                                    button-delete
+                                    data-id=user._id
+                                    title="Xoá"
+                                )
+                                    i.fa-solid.fa-trash
+
+    +pagination(pagination)
+block scripts
+    script(src="/admin/js/users.js")

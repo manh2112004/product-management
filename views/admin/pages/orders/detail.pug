@@ -1,0 +1,77 @@
+extends ../../layouts/default.pug
+block main
+    - const rate = 25000;
+    .container.mt-4
+        h2.mb-4.text-primary Chi tiết đơn hàng
+        if orders
+            .card.shadow-sm.p-4
+                if orders.userInfo
+                    h4.text-info.mb-3 Thông tin người đặt
+                    table.table.table-borderless.mb-4
+                        tbody
+                            tr
+                                th(scope="row") Họ và tên:
+                                td #{orders.userInfo.fullName}
+                            tr
+                                th(scope="row") Số điện thoại:
+                                td #{orders.userInfo.phone}
+                            tr
+                                th(scope="row") Địa chỉ:
+                                td #{orders.userInfo.address}
+                            tr
+                            if orders.status === 'confirm'
+                                th(scope="row") Trạng thái đơn hàng:
+                                    td 
+                                        span.badge.badge-success Đã xác nhận
+                            else
+                                th(scope="row") Trạng thái đơn hàng:
+                                    td 
+                                        span.badge.badge-warning Chưa xác nhận
+                            tr
+                                th(scope="row") Ngày tạo:
+                                td #{orders.createdAt.toLocaleString()}
+                            tr
+                                th(scope="row") Cập nhật:
+                                td #{orders.updatedAt.toLocaleString()}
+                else
+                    p.text-danger Không có thông tin người đặt hàng.
+
+                if orders.products && orders.products.length
+                    h4.text-info.mb-3 Danh sách sản phẩm
+                    table.table.table-striped.table-hover
+                        thead.thead-dark
+                            tr
+                                th(scope="col") #
+                                th(scope="col") Tên sản phẩm
+                                th(scope="col") Giá (VNĐ)
+                                th(scope="col") Số lượng
+                                th(scope="col") Giảm giá (%)
+                                th(scope="col") Thành tiền (VNĐ)
+                        tbody
+                            each item, index in orders.products
+                                - const discountedUSD = item.price * (1 - item.discountPercentage / 100)
+                                - const discountedVND = discountedUSD * rate
+                                - const priceVND = item.price * rate
+                                tr
+                                    td #{index + 1}
+                                    td #{item.productName}
+                                    td #{priceVND.toLocaleString()} ₫
+                                    td #{item.quantity}
+                                    td #{item.discountPercentage}%
+                                    td.text-danger #{(discountedVND * item.quantity).toLocaleString()} ₫
+
+                    // Tổng tiền
+                    - const totalUSD = orders.products.reduce((sum, p) => sum + p.price * (1 - p.discountPercentage / 100) * p.quantity, 0)
+                    - const totalVND = totalUSD * rate
+                    .text-right.mt-3
+                        h4 Tổng cộng: 
+                            span.text-danger.font-weight-bold #{totalVND.toLocaleString()} ₫
+                else
+                    p.text-muted Không có sản phẩm nào trong đơn hàng.
+            .d-flex.justify-content-end.mt-4
+                a.btn.btn-secondary.mr-2(href="/admin/orders") 
+                    i.fas.fa-arrow-left.mr-1
+                    | Quay lại
+        else
+            h4.text-danger Không tìm thấy dữ liệu đơn hàng.
+

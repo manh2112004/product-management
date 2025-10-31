@@ -1,4 +1,5 @@
 const productCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 const systemConfig = require("../../config/system");
 const createTreeHelper = require("../../helpers/createTree");
 const filterStatusHelper = require("../../helpers/filterStatus");
@@ -136,15 +137,50 @@ module.exports.changeStatus = async (req, res) => {
 module.exports.detail = async (req, res) => {
   const id = req.params.id;
   const data = await productCategory.findOne({ _id: id, deleted: false });
-  const lastUpdate = data.updatedBy[data.updatedBy.length - 1];
+  let lastUpdate = data.updatedBy[data.updatedBy.length - 1];
   const dataView = await productCategory
     .findOne({ _id: id, deleted: false })
     .select("-updatedBy");
-  console.log(dataView);
-  console.log(lastUpdate);
+  const idParent = dataView.parent_id;
+  if (idParent && idParent !== "") {
+    dataView.titleParent = await productCategory
+      .findOne({ _id: idParent })
+      .select("title -_id");
+  } else {
+    dataView.titleParent = "Không có";
+  }
+  if (lastUpdate && lastUpdate.account_id) {
+    const user = await Account.findOne({ _id: lastUpdate.account_id }).select(
+      "fullName -_id"
+    );
+    lastUpdate.userName = user || { fullName: "Không xác định" };
+  } else {
+    lastUpdate = { userName: { fullName: "Chưa cập nhật" }, updatedAt: null };
+  }
   res.render("admin/pages/products-category/detail.pug", {
     pageTitle: "Chi tiết danh mục sản phẩm",
     lastUpdate: lastUpdate,
     category: dataView,
   });
+};
+module.exports.deletePath = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await productCategory.updateOne(  
+      { _id: id },
+      {
+        deleted: true,
+        deletedBy: { account_id: res.locals.user.id, deletedAt: new Date() },
+      }
+    );
+    res.json({
+      code: 200,
+      message: "Xoá danh mục sản phẩm thành công",
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Xoá danh mục sản phẩm thất bại",
+    });
+  }
 };

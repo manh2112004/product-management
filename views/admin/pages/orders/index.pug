@@ -1,0 +1,97 @@
+extends ../../layouts/default.pug
+include ../../mixins/search.pug
+include ../../mixins/pagination.pug
+include ../../mixins/showAlert.pug
+block main
+    +showAlert(5000)
+    .container-fluid.mt-4
+        h1.text-primary.mb-4
+            i.fa-solid.fa-boxes.me-2
+            | Quản Lý Đơn Hàng
+
+    .card.shadow-sm.border-0.mb-3
+        .card-header.bg-light.fw-semibold
+            i.fa-solid.fa-filter.me-2
+            | Bộ lọc & Tìm kiếm
+        .card-body
+            .row.g-3
+                .col-md-6
+                    .btn-group(role="group")
+                        button.btn.btn-outline-warning(
+                            type="button",
+                            button-unconfirmed
+                            status="unconfirmed"
+                            class=(status === 'unconfirmed' ? 'active' : '')
+                        )
+                            i.fa-solid.fa-hourglass-half.me-1
+                            | Chưa Xác Nhận
+
+                        button.btn.btn-outline-success(
+                            type="button",
+                            button-confirm
+                            status="confirm"
+                            class=(status === 'confirm' ? 'active' : '')
+                        )
+                            i.fa-solid.fa-circle-check.me-1
+                            | Đã Xác Nhận
+                .col-md-6
+                    +search(keyword)
+    .order-card
+        table.table.table-bordered.table-hover.align-middle
+            thead.text-center.table-light
+                tr
+                    th STT
+                    th Tên khách hàng
+                    th Số điện thoại
+                    th Địa chỉ giao hàng
+                    th Tài khoản đặt
+                    th Tổng tiền (₫)
+                    th Ngày tạo
+                    th Trạng thái
+                    th Hành động
+            tbody
+                if orders.length > 0
+                    each order, index in orders
+                        - let total = 0;
+                        - if (order.products && order.products.length > 0) {
+                        -   total = order.products.reduce((sum, p) => sum + (p.price * p.quantity * (1 - (p.discountPercentage || 0)/100)), 0);
+                        - }
+                        tr
+                            td.text-center #{index + 1}
+                            td #{order.userInfo.fullName}
+                            td #{order.userInfo.phone}
+                            td #{order.userInfo.address}
+                            td #{order.user_id|| 'khách chưa đăng ký tài khoản'}
+                            td.text-end #{(total * 26000).toLocaleString('vi-VN')} ₫
+                            td.text-center #{new Date(order.createdAt).toLocaleString('vi-VN')}
+                            td.text-center
+                                if order.status === 'confirm'
+                                    span.badge.bg-success Đã Xác Nhận
+                                else
+                                    span.badge.bg-warning.text-dark Chưa Xác Nhận
+                            td.text-center
+                                a.btn.btn-sm.btn-info(
+                                    href=`/admin/orders/detail/${order._id}`
+                                )
+                                    i.fa-solid.fa-eye.me-1
+                                    | Xem
+                                if order.status === 'unconfirmed'
+                                    a.btn.btn-sm.btn-success.ms-2(
+                                        button-confirm-order
+                                        data-id=`${order._id}`
+                                    )
+                                        i.fa-solid.fa-check.me-1
+                                        | Xác nhận
+                                    a.btn.btn-sm.btn-danger.ms-2(
+                                        button-cancel-order
+                                        data-id=`${order._id}`
+                                    )
+                                        i.fa-solid.fa-xmark.me-1
+                                        | Hủy
+                else
+                    tr
+                        td.text-center(colspan="9") Không có đơn hàng nào.
+
+    +pagination(pagination)
+block scripts
+    script(src="/admin/js/orders.js")
