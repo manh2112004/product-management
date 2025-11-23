@@ -15,6 +15,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "active",
     },
+    rank: {
+      type: String,
+      default: "Mới",
+    },
+    totalSpent: {
+      type: Number,
+      default: 0,
+    },
     requestFriends: Array,
     acceptFriends: Array,
     friendList: [

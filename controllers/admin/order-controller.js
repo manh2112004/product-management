@@ -2,7 +2,8 @@ const Orders = require("../../models/order.model");
 const Products = require("../../models/product.model");
 const paginationHelpers = require("../../helpers/pagination");
 const searchNameHelpers = require("../../helpers/searchName");
-const Order = require("../../models/order.model");
+const User = require("../../models/user.model");
+const Cart = require("../../models/cart.model");
 module.exports.index = async (req, res) => {
   const find = {
     deleted: false,
@@ -37,7 +38,25 @@ module.exports.changeStatus = async (req, res) => {
 };
 module.exports.confirmOrder = async (req, res) => {
   const orderId = req.params.id;
-  await Orders.updateOne({ _id: orderId }, { status: "confirm" });
+  const order = await Orders.findById(orderId);
+  order.status = "confirm";
+  await order.save();
+  const cart = await Cart.findById(order.cart_id);
+  const user = await User.findById(cart.user_id);
+  const totalOrder = order.products.reduce((sum, p) => {
+    const priceAfterDiscount =
+      p.price * (1 - (p.discountPercentage || 0) / 100);
+    return sum + priceAfterDiscount * p.quantity;
+  }, 0);
+  user.totalSpent += totalOrder * 25000;
+  if (user.totalSpent >= 10000000) {
+    user.rank = "VIP";
+  } else if (user.totalSpent >= 5000000) {
+    user.rank = "Thành Viên";
+  } else {
+    user.rank = "Mới";
+  }
+  await user.save();
   res.json({
     code: 200,
     message: "Đã xác nhận đơn hàng",

@@ -25,7 +25,6 @@ if (tablePermissions) {
         });
       }
     });
-    console.log(Permissions);
     if (Permissions.length > 0) {
       const formChangePermissions = document.querySelector(
         "#form-change-permissions"

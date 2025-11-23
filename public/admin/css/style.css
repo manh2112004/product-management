@@ -311,3 +311,33 @@ body {
     padding: 0.35rem 0.6rem;
   }
 }
+/* dropdown bin */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+.dropdown-item {
+  display: block;
+  padding: 10px 18px;
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+.dropdown-item:hover {
+  background-color: #f3f4f6;
+  color: #d32f2f; /* Đỏ nhẹ để hợp với icon thùng rác */
+  transform: translateX(4px);
+}
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+.dropdown-item:active {
+  background-color: #e5e7eb;
+}
+/* ⚙️ Tùy chỉnh vị trí menu */
+.dropdown-menu {
+  z-index: 1000;
+  margin-left: -110px;
+}

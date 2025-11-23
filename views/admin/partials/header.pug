@@ -5,7 +5,7 @@ header.header
                 .inner-logo
                     a(href="/admin/dashboard") ADMIN
             .col-9
-                div(class="text-right")
+                div.text-right
                     a(
                         href=`${prefixAdmin}/my-account`
                         class="btn btn-primary btn-sm mr-2"
@@ -14,3 +14,12 @@ header.header
                         href=`${prefixAdmin}/auth/logout`
                         class="btn btn-danger btn-sm"
                     ) Đăng xuất
+                    .dropdown(style="position: relative; display: inline-block;")
+                        a.btn.btn-outline-danger.btn-sm.ml-2(href="", id="trashBtn")
+                            i(class="fa-solid fa-trash")
+
+                        ul.dropdown-menu
+                            li
+                                a(href=`${prefixAdmin}/bin/products`, class="dropdown-item") Thùng rác sản phẩm
+                            li
+                                a(href=`${prefixAdmin}/bin/orders`, class="dropdown-item") Thùng rác đơn hàng

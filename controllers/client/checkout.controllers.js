@@ -35,6 +35,7 @@ module.exports.order = async (req, res) => {
     _id: cartID,
   });
   const products = [];
+  let orderTotal = 0;
   for (const product of cart.products) {
     const objectProduct = {
       product_id: product.product_id,
@@ -82,7 +83,6 @@ module.exports.success = async (req, res) => {
   order.totalPrice = order.products.reduce((sum, item) => {
     return sum + item.totalPrice;
   }, 0);
-  console.log(order);
   res.render("client/pages/checkout/success.pug", {
     pageTitle: "Đặt hàng thành công",
     order: order,

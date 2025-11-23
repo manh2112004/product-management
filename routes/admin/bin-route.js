@@ -1,0 +1,10 @@
+const express = require("express");
+const router = express.Router();
+const controller = require("../../controllers/admin/bin-controller");
+router.get("/products", controller.binProduct);
+router.get("/orders", controller.binOrders);
+router.patch("/restoreOrder/:id", controller.restoreOrder);
+router.delete("/deletePermanentOrder/:id", controller.deleteOrder);
+router.patch("/restoreProduct/:id", controller.restoreProduct);
+router.delete("/deletePermanentProduct/:id", controller.deleteProduct);
+module.exports = router;

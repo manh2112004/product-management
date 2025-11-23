@@ -36,7 +36,7 @@ module.exports.index = async (req, res) => {
   if (req.query.sortKey && req.query.sortValue) {
     sort[req.query.sortKey] = req.query.sortValue;
   } else {
-    sort.position = "desc";
+    sort.position = "asc";
   }
   // end sort
   const products = await Product.find(find)

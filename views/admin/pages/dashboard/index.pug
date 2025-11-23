@@ -1,49 +1,106 @@
 extends ../../layouts/default.pug
+block styles
+    link(rel="stylesheet", href="/admin/css/dashboard.css")
+
 block main
-    h1 Trang tổng quan
+    h1.text-center.mt-3 Trang tổng quan
+    script.
+        window.statisticData = !{JSON.stringify(statistic)};
+    .card.mb-4.mt-4(style="border-left:5px solid #0d6efd;border-radius:10px")
+        .card-header.bg-primary.text-white
+            h5.mb-0 Thông tin tài khoản
+        .card-body
+            .d-flex.align-items-center
+                if user.avatar
+                    img(src=user.avatar style="height:80px;width:80px;border-radius:50%;margin-right:20px")
+                .info
+                    if user.fullName
+                        p.mb-1 Họ tên:
+                            b #{user.fullName}
+                    if user.phone
+                        p.mb-1 Số điện thoại:
+                            b #{user.phone}
+                    if user.email
+                        p.mb-1 Email:
+                            b #{user.email}
+                    if role.title
+                        p.mb-0 Phân quyền:
+                            b.text-danger #{role.title}
     .row.mt-4
-        .col-12
-            .card.mb-4
-                .card-header Thông tin tài khoản
+        .col-md-6.col-lg-3
+            .dashboard-card.border-green.shadow-sm
+                i.fas.fa-list-alt.dashboard-icon(style="color:#20c997")
+                h5 Danh mục sản phẩm
+                p.mb-1 Tổng số:
+                    b #{statistic.categoryProduct.total}
+                p.mb-1 Đang hoạt động:
+                    b.text-success #{statistic.categoryProduct.active}
+                p.mb-0 Dừng hoạt động:
+                    b.text-danger #{statistic.categoryProduct.inactive}
+
+        .col-md-6.col-lg-3
+            .dashboard-card.border-blue.shadow-sm
+                i.fas.fa-box.dashboard-icon(style="color:#0d6efd")
+                h5 Sản phẩm
+                p.mb-1 Tổng số:
+                    b #{statistic.product.total}
+                p.mb-1 Đang hoạt động:
+                    b.text-success #{statistic.product.active}
+                p.mb-0 Dừng hoạt động:
+                    b.text-danger #{statistic.product.inactive}
+
+        .col-md-6.col-lg-3
+            .dashboard-card.border-purple.shadow-sm
+                i.fas.fa-users-cog.dashboard-icon(style="color:#6610f2")
+                h5 Tài khoản admin
+                p.mb-1 Tổng số:
+                    b #{statistic.account.total}
+                p.mb-1 Đang hoạt động:
+                    b.text-success #{statistic.account.active}
+                p.mb-0 Dừng hoạt động:
+                    b.text-danger #{statistic.account.inactive}
+
+        .col-md-6.col-lg-3
+            .dashboard-card.border-orange.shadow-sm
+                i.fas.fa-user.dashboard-icon(style="color:#fd7e14")
+                h5 Tài khoản client
+                p.mb-1 Tổng số:
+                    b #{statistic.user.total}
+                p.mb-1 Đang hoạt động:
+                    b.text-success #{statistic.user.active}
+                p.mb-0 Dừng hoạt động:
+                    b.text-danger #{statistic.user.inactive}
+    .row.mt-4
+        .col-md-6.col-lg-3
+            .dashboard-card.border-red.shadow-sm
+                i.fas.fa-receipt.dashboard-icon(style="color:#dc3545")
+                h5 Đơn hàng
+                p.mb-1 Tổng đơn:
+                    b #{statistic.order.total}
+                p.mb-1 Đã xác nhận:
+                    b.text-success #{statistic.order.confirm}
+                p.mb-0 Chưa xác nhận:
+                    b.text-danger #{statistic.order.unconfirmed}
+
+    h3.mt-5.text-center Biểu đồ thống kê
+    .row.mt-4
+        .col-md-4
+            .card.shadow-sm
+                .card-header.bg-info.text-white.text-center Biểu đồ sản phẩm (Pie)
                 .card-body
-                    if(user.avatar)
-                        img(
-                            src=user.avatar,
-                            style="height:100px;margin-bottom:15px"
-                        )
-                    if(user.fullName)
-                        p Họ tên: <b>#{user.fullName}</b>
-                    if(user.phone)
-                        p Số điện thoại: <b>#{user.phone}</b>
-                    if(user.email)
-                        p Email: <b>#{user.email}</b>
-                    if(role.title)
-                        p Phân quyền: <b>#{role.title}</b>
-        .col-6
-            .card.mb-4
-                .card-header Danh mục sản phẩm
+                    canvas#pieChart(width="400" height="400")
+
+        .col-md-4
+            .card.shadow-sm
+                .card-header.bg-warning.text-white.text-center Biểu đồ đơn hàng (Pie)
                 .card-body
-                    p Số lượng: <b>#{statistic.categoryProduct.total}</b>
-                    p Hoạt động: <b>#{statistic.categoryProduct.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.categoryProduct.inactive}</b>
-        .col-6
-            .card.mb-4
-                .card-header Sản phẩm
+                    canvas#orderChart(width="400" height="400")
+
+        .col-md-4
+            .card.shadow-sm
+                .card-header.bg-success.text-white.text-center Biểu đồ tổng quát (Bar)
                 .card-body
-                    p Số lượng: <b>#{statistic.product.total}</b>
-                    p Hoạt động: <b>#{statistic.product.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.product.inactive}</b>
-        .col-6
-            .card.mb-4
-                .card-header Tài khoản admin
-                .card-body
-                    p Số lượng: <b>#{statistic.account.total}</b>
-                    p Hoạt động: <b>#{statistic.account.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.account.inactive}</b>
-        .col-6
-            .card.mb-4
-                .card-header tài khoản client
-                .card-body
-                    p Số lượng: <b>#{statistic.user.total}</b>
-                    p Hoạt động: <b>#{statistic.user.active}</b>
-                    p Dừng hoạt động: <b>#{statistic.user.inactive}</b>
+                    canvas#barChart(width="400" height="400")
+
+block scripts
+    script(src="/admin/js/dashboard.js")

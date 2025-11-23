@@ -44,7 +44,6 @@ block main
                     th Tên khách hàng
                     th Số điện thoại
                     th Địa chỉ giao hàng
-                    th Tài khoản đặt
                     th Tổng tiền (₫)
                     th Ngày tạo
                     th Trạng thái
@@ -61,8 +60,7 @@ block main
                             td #{order.userInfo.fullName}
                             td #{order.userInfo.phone}
                             td #{order.userInfo.address}
-                            td #{order.user_id|| 'khách chưa đăng ký tài khoản'}
-                            td.text-end #{(total * 26000).toLocaleString('vi-VN')} ₫
+                            td.text-end #{(total * 25000).toLocaleString('vi-VN')} ₫
                             td.text-center #{new Date(order.createdAt).toLocaleString('vi-VN')}
                             td.text-center
                                 if order.status === 'confirm'

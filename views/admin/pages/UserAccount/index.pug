@@ -37,6 +37,7 @@ block main
                         th.text-center Ảnh đại diện
                         th Full Name
                         th Email
+                        th Rank
                         th.text-center Status
                         th.text-center Online
                         th.text-center Updated At
@@ -69,6 +70,7 @@ block main
                                     )
                             td #{user.fullName}
                             td #{user.email}
+                            td #{user.rank}
                             td.text-center
                                 if user.status == "active"
                                     span.badge.bg-success(
@@ -94,7 +96,11 @@ block main
                                 else
                                     span.text-muted Offline
                             td.text-center #{new Date(user.updatedAt).toLocaleString()}
-                            td.text-center #{new Date(user.deletedBy.deletedAt).toLocaleString()}
+                            td.text-center
+                                if user.deletedBy && user.deletedBy.deletedAt
+                                    = new Date(user.deletedBy.deletedAt).toLocaleString()
+                                else
+                                    | Chưa xóa
                             td.text-center
                                 a(
                                     href=`${prefixAdmin}/UserAccount/detail/${user._id}`

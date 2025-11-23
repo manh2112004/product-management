@@ -32,7 +32,6 @@ module.exports.edit = async (req, res) => {
       deleted: false,
     };
     const data = await Role.findOne(find);
-    console.log(data);
     res.render("admin/pages/roles/edit.pug", {
       pageTitle: "Chỉnh sửa Nhóm quyền",
       data: data,

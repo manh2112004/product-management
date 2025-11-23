@@ -3,40 +3,48 @@ const Product = require("../../models/product.model");
 const productHelper = require("../../helpers/product");
 // [POST]/cart/add/:productID
 module.exports.addPost = async (req, res) => {
-  const product_Id = req.params.productID;
-  const quantity = req.body.quantity;
-  const cartID = req.cookies.cartID;
-  const cart = await Cart.findOne({
-    _id: cartID,
-  });
-  const existProductInCart = cart.products.find(
-    (item) => item.product_id == product_Id
-  );
-  if (existProductInCart) {
-    const quantityNew = parseInt(quantity) + existProductInCart.quantity;
-    await Cart.updateOne(
-      {
-        _id: cartID,
-        "products.product_id": product_Id,
-      },
-      {
-        $set: {
-          "products.$.quantity": quantityNew, //tìm vào mảng products trong cart và update quantity
-        },
-      }
+  if (res.locals.user && res.locals.user._id) {
+    const product_Id = req.params.productID;
+    const quantity = req.body.quantity;
+    const cartID = req.cookies.cartID;
+    const cart = await Cart.findOne({
+      _id: cartID,
+    });
+    const existProductInCart = cart.products.find(
+      (item) => item.product_id == product_Id
     );
+    if (existProductInCart) {
+      const quantityNew = parseInt(quantity) + existProductInCart.quantity;
+      await Cart.updateOne(
+        {
+          _id: cartID,
+          "products.product_id": product_Id,
+        },
+        {
+          $set: {
+            "products.$.quantity": quantityNew, //tìm vào mảng products trong cart và update quantity
+          },
+        }
+      );
+    } else {
+      const objectCart = [
+        {
+          product_id: product_Id,
+          quantity: quantity,
+        },
+      ];
+      await Cart.updateOne(
+        { _id: cartID },
+        { $push: { products: objectCart } }
+      );
+    }
+    req.flash("success", "Thêm thành công");
+    const backURL = req.get("Referer") || "/cart";
+    res.redirect(backURL);
   } else {
-    const objectCart = [
-      {
-        product_id: product_Id,
-        quantity: quantity,
-      },
-    ];
-    await Cart.updateOne({ _id: cartID }, { $push: { products: objectCart } });
+    req.flash("error", "Bạn chưa đăng nhập");
+    return res.redirect(req.get("Referer") || "/login");
   }
-  req.flash("success", "Thêm thành công");
-  const backURL = req.get("Referer") || "/cart";
-  res.redirect(backURL);
 };
 // [GET]/cart
 module.exports.index = async (req, res) => {

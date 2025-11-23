@@ -54,21 +54,14 @@ block main
                                 th Email:
                                 td #{user.email}
                             tr
-                                th Token User:
-                                td #{user.tokenUser}
+                                th Tổng tiền
+                                    td #{user.totalSpent.toLocaleString('vi-VN')} vnđ
                             tr
                                 th Ngày tạo:
                                 td #{new Date(user.createdAt.$date).toLocaleString()}
                             tr
                                 th Cập nhật lần cuối:
                                 td #{new Date(user.updatedAt.$date).toLocaleString()}
-                            tr
-                                th Đã xoá:
-                                td
-                                    if user.deleted
-                                        span.text-danger Có
-                                    else
-                                        span.text-success Không
 
     // Danh sách yêu cầu kết bạn
     .card.shadow-sm.border-0.mb-4

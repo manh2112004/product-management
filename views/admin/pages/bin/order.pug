@@ -1,0 +1,116 @@
+extends ../../layouts/default.pug
+include ../../mixins/search.pug
+include ../../mixins/pagination.pug
+
+block styles
+    style.
+        .main {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table {
+            width: 100%;
+            table-layout: auto;
+            word-wrap: break-word;
+        }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+            white-space: normal !important;
+        }
+
+        .table td ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-group .btn {
+            margin: 0 3px;
+        }
+
+        @media (max-width: 768px) {
+            .main { padding: 10px; }
+            .table { font-size: 14px; }
+        }
+
+block main
+    .container-fluid.mt-4
+        .d-flex.justify-content-between.align-items-center.mb-4
+            h4.text-danger.mb-0
+                i.fas.fa-trash-alt.mr-2
+                | Danh sách đơn hàng đã bị huỷ
+            a.btn.btn-secondary(href="/admin/orders")
+                i.fas.fa-arrow-left.mr-1
+                | Quay lại danh sách
+
+        +search(keyword)
+
+        if deletedOrders && deletedOrders.length > 0
+            .table-responsive.mt-3
+                table.table.table-hover.table-bordered.bg-white.shadow-sm
+                    thead.thead-dark
+                        tr
+                            th STT
+                            th Tên khách hàng
+                            th Số điện thoại
+                            th Địa chỉ
+                            th Sản phẩm trong đơn
+                            th Tổng tiền
+                            th Ngày tạo
+                            th.text-center(style="width: 180px;") Hành động
+                    tbody
+                        each order, index in deletedOrders
+                            - const total = order.products?.reduce((sum, p) => sum + (p.price * p.quantity), 0) || 0;
+                            tr
+                                td #{index + 1}
+                                td #{order.userInfo ? order.userInfo.fullName : 'Không có tên'}
+                                td #{order.userInfo ? order.userInfo.phone : 'Không có số điện thoại'}
+                                td #{order.userInfo ? order.userInfo.address : 'Không có địa chỉ'}
+                                td 
+                                    if order.products && order.products.length
+                                        ul.mb-0
+                                            each p in order.products
+                                                li.mb-2
+                                                    strong #{p.productName || 'Sản phẩm không tồn tại'}
+                                                    br
+                                                    span.text-muted Số lượng: #{p.quantity}
+                                                    br
+                                                    span.text-muted Giá: #{(p.price * 25000).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                                    else
+                                        span.text-muted Không có sản phẩm
+                                td.text-success #{(total * 25000).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                                td #{new Date(order.createdAt).toLocaleString('vi-VN')}
+                                td.text-center
+                                    .btn-group
+                                        a.btn.btn-sm.btn-success(
+                                            btn-restore
+                                            data-id=order._id
+                                            title="Khôi phục"
+                                        )
+                                            i.fas.fa-undo-alt
+                                        a.btn.btn-sm.btn-danger.text-white(
+                                            btn-delete
+                                            data-id=order._id
+                                            title="Xoá vĩnh viễn"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xoá vĩnh viễn đơn hàng này không?')"
+                                        )
+                                            i.fas.fa-trash-alt
+            +pagination(pagination)
+        else
+            .alert.alert-warning.text-center.mt-4
+                i.fas.fa-box-open.mr-2
+                | Hiện chưa có đơn hàng nào bị huỷ.
+
+block scripts
+    script(src="/admin/js/deletedOrder.js")

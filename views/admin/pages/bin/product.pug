@@ -1,0 +1,105 @@
+extends ../../layouts/default.pug
+include ../../mixins/search.pug
+include ../../mixins/pagination.pug
+
+block styles
+    style.
+        .main {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table {
+            width: 100%;
+            table-layout: auto;
+            word-wrap: break-word;
+        }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+            white-space: normal !important;
+        }
+
+        .table td img {
+            max-width: 60px;
+            height: auto;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        @media (max-width: 768px) {
+            .main { padding: 10px; }
+            .table { font-size: 14px; }
+        }
+
+block main
+    .container-fluid.mt-4
+        .d-flex.justify-content-between.align-items-center.mb-4
+            h4.text-danger.mb-0
+                i.fas.fa-trash-alt.mr-2
+                | Danh sách sản phẩm đã bị xoá
+            a.btn.btn-secondary(href="/admin/products") 
+                i.fas.fa-arrow-left.mr-1
+                | Quay lại danh sách
+
+        +search(keyword)
+        if deletedProducts && deletedProducts.length > 0
+            .table-responsive.mt-3
+                table.table.table-hover.table-bordered.bg-white.shadow-sm
+                    thead.thead-dark
+                        tr
+                            th(style="width: 80px;") Ảnh
+                            th Tên sản phẩm
+                            th Giá
+                            th Giảm giá
+                            th Người xoá
+                            th Thời gian xoá
+                            th.text-center(style="width: 180px;") Hành động
+                    tbody
+                        each product in deletedProducts
+                            tr
+                                td
+                                    img(src=product.thumbnail, alt="chưa có ảnh", class="rounded")
+                                td.font-weight-bold= product.title
+                                td.text-success #{(product.price * 25000).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                                td.text-info #{product.discountPercentage}%
+                                td 
+                                    if product.deletedBy && product.deletedBy.account_id
+                                        | #{product.deletedBy.fullName}
+                                    else
+                                        span.text-muted Chưa rõ
+                                td 
+                                    if product.deletedBy && product.deletedBy.deletedAt
+                                        | #{new Date(product.deletedBy.deletedAt).toLocaleString()}
+                                    else
+                                        span.text-muted Chưa rõ
+                                td.text-center
+                                    .btn-group
+                                        a.btn.btn-sm.btn-success(
+                                            btn-restore
+                                            data-id=product.id
+                                        )
+                                            i.fas.fa-undo-alt
+                                        a.btn.btn-sm.btn-danger.text-white(
+                                            btn-DeletePermanentProduct
+                                            data-id=product.id
+                                            onclick="return confirm('Bạn có chắc chắn muốn xoá vĩnh viễn sản phẩm này không?')"
+                                        )
+                                            i.fas.fa-trash-alt
+            +pagination(pagination)
+        else
+            .alert.alert-warning.text-center.mt-4
+                i.fas.fa-box-open.mr-2
+                | Hiện chưa có sản phẩm nào bị xoá.
+
+block scripts
+    script(src="/admin/js/deletedProduct.js")

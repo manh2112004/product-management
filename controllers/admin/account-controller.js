@@ -94,7 +94,6 @@ module.exports.editPatch = async (req, res) => {
 };
 // [GET] /admin/accounts/detail/:id
 module.exports.detail = async (req, res) => {
-  console.log(req.params.id);
   const account = await Account.findOne(
     { _id: req.params.id },
     "-password -token"
